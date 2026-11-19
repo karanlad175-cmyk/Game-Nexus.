@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     email_username: str = ""
     email_password: str = ""
     email_from: str = ""
+    resend_api_key: str = ""
     session_secret: str = "change-this-session-secret"
     razorpay_key_id: str = ""
     razorpay_key_secret: str = ""
@@ -24,8 +25,8 @@ class Settings(BaseSettings):
     razorpay_monthly_plan_id: str = ""
     razorpay_yearly_plan_id: str = ""
     model_config = SettingsConfigDict(
-    env_file=Path(__file__).resolve().parents[1] / ".env",
-    extra="ignore"
-)
+        env_file=Path(__file__).resolve().parents[1] / ".env",
+        extra="ignore"
+    )
 
 settings = Settings()
