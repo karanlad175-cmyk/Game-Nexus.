@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Nexus — Ranked Reports From the Ladder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+:root{
+  --ink:#0a0d12;
+  --panel:#12161e;
+  --panel-2:#171c26;
+  --line:#262d3b;
+  --signal:#ff4b2b;
+  --signal-dim:#c73a20;
+  --live:#00e5a0;
+  --gold:#f5b942;
+  --text:#eef1f6;
+  --muted:#8b93a7;
+  --muted-2:#5b6478;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+::selection{background:var(--signal);color:#000;}
+a{text-decoration:none;color:inherit;}
+.font-display{font-family:'Anton',sans-serif;letter-spacing:.5px;}
+.font-head{font-family:'Oswald',sans-serif;text-transform:uppercase;}
+.font-mono{font-family:'JetBrains Mono',monospace;}
+.text-signal{color:var(--signal);}
+.text-live{color:var(--live);}
+.text-gold{color:var(--gold);}
+.text-muted-2{color:var(--muted-2);}
+.bg-panel{background:var(--panel);}
+
+/* ===== Ticker ===== */
+.ticker-bar{
+  background:var(--panel-2);
+  border-bottom:1px solid var(--line);
+  overflow:hidden;
+  white-space:nowrap;
+  height:38px;
+  display:flex;
+  align-items:center;
+}
+.ticker-track{
+  display:inline-flex;
+  align-items:center;
+  animation:ticker-scroll 32s linear infinite;
+}
+.ticker-track span{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;
+  letter-spacing:.03em;
+  color:var(--muted);
+  padding:0 1.75rem;
+  position:relative;
+}
+.ticker-track span:not(:last-child)::after{
+  content:"//";
+  position:absolute;
+  right:-.15rem;
+  color:var(--line);
+}
+.ticker-track .live-tag{color:var(--live);font-weight:600;}
+@keyframes ticker-scroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+.pulse-dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--live);margin-right:6px;
+  box-shadow:0 0 0 0 rgba(0,229,160,.6);
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(0,229,160,.55);}
+  70%{box-shadow:0 0 0 7px rgba(0,229,160,0);}
+  100%{box-shadow:0 0 0 0 rgba(0,229,160,0);}
+}
+
+/* ===== Navbar ===== */
+.navbar-mmr{
+  background:rgba(10,13,18,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+  padding-top:.9rem;
+  padding-bottom:.9rem;
+}
+.brand-mark{
+  font-family:'Anton',sans-serif;
+  font-size:1.6rem;
+  letter-spacing:.5px;
+  color:var(--text);
+}
+.brand-mark .dot{color:var(--signal);}
+.nav-mmr .nav-link{
+  font-family:'Oswald',sans-serif;
+  text-transform:uppercase;
+  font-size:.82rem;
+  letter-spacing:.08em;
+  color:var(--muted);
+  padding:.5rem 1rem !important;
+  transition:color .15s ease;
+}
+.nav-mmr .nav-link:hover,.nav-mmr .nav-link.active{color:white;}
+.nav-mmr .nav-link.active{color:var(--signal);}
+.btn-signal{
+  background:var(--signal);
+  color:#0a0d12;
+  font-family:'Oswald',sans-serif;
+  text-transform:uppercase;
+  font-weight:600;
+  font-size:.82rem;
+  letter-spacing:.06em;
+  padding:.55rem 1.3rem;
+  border:none;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  transition:background .15s ease, color .15s ease;
+}
+.btn-signal:hover{background:var(--live);color:#0a0d12;}
+.btn-outline-mmr{
+  background:transparent;
+  border:1px solid var(--line);
+  color:var(--text);
+  font-family:'Oswald',sans-serif;
+  text-transform:uppercase;
+  font-size:.8rem;
+  letter-spacing:.06em;
+  padding:.5rem 1.2rem;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  transition:border-color .15s ease,color .15s ease;
+}
+.btn-outline-mmr:hover{border-color:var(--signal);color:var(--signal);}
+
+/* ===== HUD corner brackets ===== */
+.hud-frame{position:relative;}
+.hud-frame::before,.hud-frame::after,
+.hud-frame .hud-bl,.hud-frame .hud-br{
+  content:"";position:absolute;width:14px;height:14px;
+  border-color:var(--signal);opacity:0;
+  transition:opacity .2s ease;
+}
+.hud-frame::before{top:-1px;left:-1px;border-top:2px solid;border-left:2px solid;}
+.hud-frame::after{top:-1px;right:-1px;border-top:2px solid;border-right:2px solid;}
+.hud-frame .hud-bl{bottom:-1px;left:-1px;border-bottom:2px solid;border-left:2px solid;}
+.hud-frame .hud-br{bottom:-1px;right:-1px;border-bottom:2px solid;border-right:2px solid;}
+.hud-frame:hover::before,.hud-frame:hover::after,
+.hud-frame:hover .hud-bl,.hud-frame:hover .hud-br{opacity:1;}
+
+/* ===== Eyebrow / section labels ===== */
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  text-transform:uppercase;
+  font-size:.75rem;
+  letter-spacing:.12em;
+  color:var(--signal);
+  display:flex;align-items:center;gap:.5rem;
+}
+.eyebrow::before{content:"";width:20px;height:2px;background:var(--signal);display:inline-block;}
+.section-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(1.8rem,3vw,2.6rem);
+  letter-spacing:.3px;
+  margin-top:.4rem;
+}
+
+/* ===== Hero ===== */
+.hero{padding:4.5rem 0 3.5rem;}
+.hero-headline{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(2.6rem,6vw,4.6rem);
+  line-height:1.02;
+  letter-spacing:.2px;
+}
+.hero-headline .stroke{
+  -webkit-text-stroke:1.5px var(--text);
+  color:transparent;
+}
+.hero-sub{color:var(--muted);font-size:1.05rem;max-width:520px;line-height:1.6; text-align:justify;}
+.hero-visual{
+  position:relative;
+  aspect-ratio:4/3.1;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,75,43,.35), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(0,229,160,.25), transparent 50%),
+    linear-gradient(160deg,#171c26,#0d1117 70%);
+  clip-path:polygon(28px 0,100% 0,100% calc(100% - 28px),calc(100% - 28px) 100%,0 100%,0 28px);
+  border:1px solid var(--line);
+  overflow:hidden;
+}
+.hero-visual .grid-overlay{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(11, 11, 11, 0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(11, 11, 11, 0.06) 1px,transparent 1px);
+  background-size:28px 28px;
+  /* mask-image:radial-gradient(circle at 50% 50%, black, transparent 75%); */
+}
+.hero-visual .rank-badge{
+  position:absolute;bottom:1.4rem;left:1.4rem;
+  font-family:'Anton',sans-serif;font-size:3.2rem;color:rgba(255, 255, 255, 0.9);
+  line-height:1;
+}
+.hero-visual .rank-tag{
+  position:absolute;top:1.4rem;left:1.4rem;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:#ffff;text-transform:uppercase;
+  border:1px solid #ffff;padding:.2rem .6rem;letter-spacing:.08em;
+}
+.hero-stats{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1.6rem;}
+.stat-num{font-family:'Anton',sans-serif;font-size:2.2rem;color:var(--text);line-height:1;}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted-2);text-transform:uppercase;letter-spacing:.08em;}
+
+/* ===== Post cards ===== */
+.post-card{background:var(--panel);border:1px solid var(--line);height:100%;transition:transform .18s ease, border-color .18s ease;}
+.post-card:hover{transform:translateY(-4px);border-color:var(--signal-dim);}
+.post-thumb{
+  aspect-ratio:16/10;position:relative;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%);
+}
+.post-thumb .cat-tag{
+  position:absolute;top:.85rem;left:.85rem;z-index:2;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.06em;
+  background:rgba(10,13,18,.85);color:var(--signal);padding:.25rem .55rem;
+  border:1px solid var(--signal-dim);
+}
+.post-thumb-art{position:absolute;inset:0;}
+.post-body{padding:1.3rem 1.4rem 1.5rem;}
+.post-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:1.18rem;text-transform:none;line-height:1.3;margin:.4rem 0 .6rem;}
+.post-title a{transition:color .15s ease;}
+.post-title a:hover{color:var(--signal);}
+.post-meta{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted-2);letter-spacing:.03em;}
+.post-excerpt{color:var(--muted);font-size:.9rem;line-height:1.55; text-align:justify;}
+
+.featured-post{background:var(--panel);border:1px solid var(--line);overflow:hidden;}
+.featured-thumb{
+  aspect-ratio:16/11;position:relative;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 34px) 0,100% 34px,100% 100%,0 100%);
+}
+
+/* ===== Sidebar widgets ===== */
+.widget{background:var(--panel);border:1px solid var(--line);padding:1.4rem;}
+.widget-title{font-family:'Oswald',sans-serif;text-transform:uppercase;font-size:.95rem;letter-spacing:.06em;border-bottom:1px solid var(--line);padding-bottom:.7rem;margin-bottom:1rem;}
+.tag-pill{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);
+  border:1px solid var(--line);padding:.3rem .7rem;display:inline-block;margin:0 .35rem .5rem 0;
+  transition:border-color .15s ease,color .15s ease;
+}
+.tag-pill:hover{border-color:var(--signal);color:var(--signal);}
+.rank-list-item{display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--line);}
+.rank-list-item:last-child{border-bottom:none;}
+.rank-num{font-family:'Anton',sans-serif;color:var(--muted-2);font-size:1.3rem;width:28px;}
+
+/* ===== Newsletter band ===== */
+.band-signal{
+  background:linear-gradient(120deg,#171c26,#0d1117);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.form-mmr .form-control{
+  background:var(--ink);border:1px solid var(--line);color:var(--text);
+  border-radius:0;padding:.75rem 1rem;font-family:'Inter',sans-serif;
+}
+.form-mmr .form-control:focus{border-color:var(--signal);box-shadow:none;background:var(--ink);color:var(--text);}
+.form-mmr .form-control::placeholder{color:var(--muted-2);}
+
+/* ===== Footer ===== */
+footer{background:var(--panel-2);border-top:1px solid var(--line);}
+.footer-title{font-family:'Oswald',sans-serif;text-transform:uppercase;font-size:.85rem;letter-spacing:.08em;color:var(--text);margin-bottom:1rem;}
+.footer-link{color:var(--muted);font-size:.88rem;display:block;padding:.28rem 0;transition:color .15s ease;}
+.footer-link:hover{color:var(--signal);}
+.social-icon{
+  width:36px;height:36px;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;
+  color:var(--muted);transition:all .15s ease;
+}
+.social-icon:hover{border-color:var(--signal);color:var(--signal);}
+.footer-bottom{border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted-2);}
+
+/* Back to top */
+#backToTop{
+  position:fixed;bottom:1.6rem;right:1.6rem;width:44px;height:44px;
+  background:var(--signal);color:#0a0d12;border:none;display:none;align-items:center;justify-content:center;
+  z-index:999;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.navbar-brand:focus, .navbar-brand:hover {
+    color: #ffff;
+}
+
+@media(max-width:991px){
+  .hero-visual{margin-top:2.5rem;}
+}
+@media (prefers-reduced-motion: reduce){
+  .ticker-track{animation:none;}
+  .pulse-dot{animation:none;}
+}
+
+/* GAME NEXUS - Dynamic Article Cards */
+.post-card {
+    background: #18181B !important;
+    border: 1px solid #2A2A30 !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    color: #FAFAFA !important;
+    height: 100%;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    border-color: #6366F1 !important;
+}
+
+.post-card .card-body {
+    background: #18181B !important;
+    color: #FAFAFA !important;
+    padding: 20px;
+}
+
+.post-card .card-title {
+    color: #FAFAFA !important;
+    font-weight: 600;
+}
+
+.post-card .card-text {
+    color: #A1A1AA !important;
+}
+
+.post-card small {
+    color: #A1A1AA !important;
+}
+
+.post-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* GAME NEXUS Navbar Logo */
+.navbar-logo {
+    width: 65px;
+    height: 45px;
+    object-fit: contain;
+    display: block;
+}
+
+.brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 576px) {
+    .navbar-logo {
+        width: 55px;
+        height: 38px;
+    }
+}
+
+/* GAME NEXUS SEARCH BUTTON */
+.btn-search-mmr {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 8px;
+    color: #fff;
+    background: #18181b;
+    transition: 0.25s ease;
+}
+
+.btn-search-mmr:hover {
+    color: #ff4b2b;
+    border-color: #ff4b2b;
+    background: rgba(255,75,43,0.08);
+}
+
+/* SEARCH OVERLAY */
+.gn-search-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.82);
+    backdrop-filter: blur(8px);
+    padding: 100px 16px 30px;
+}
+
+.gn-search-overlay.active {
+    display: block;
+}
+
+.gn-search-box {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 25px;
+    background: #121214;
+    border: 1px solid #303036;
+    border-radius: 14px;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.5);
+}
+
+.gn-search-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.gn-search-header h5 {
+    color: #fff;
+    font-weight: 700;
+}
+
+.gn-search-header p {
+    color: #999;
+    font-size: 13px;
+    margin: 5px 0 0;
+}
+
+#closeSearchBtn {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 20px;
+}
+
+#closeSearchBtn:hover {
+    color: #ff4b2b;
+}
+
+.gn-search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #09090b;
+    border: 1px solid #ff4b2b;
+    border-radius: 9px;
+    padding: 13px 15px;
+}
+
+.gn-search-input-wrap > i {
+    color: #ff4b2b;
+}
+
+.gn-search-input-wrap input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 15px;
+}
+
+.gn-search-input-wrap input::placeholder {
+    color: #777;
+}
+
+.gn-search-input-wrap span {
+    color: #777;
+    font-size: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 3px 6px;
+}
+
+.gn-search-results {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 18px;
+}
+
+.gn-search-hint {
+    color: #888;
+    text-align: center;
+    padding: 25px 10px;
+    font-size: 14px;
+}
+
+@media(max-width: 576px) {
+    .gn-search-overlay {
+        padding-top: 75px;
+    }
+
+    .gn-search-box {
+        padding: 18px;
+    }
+
+    .gn-search-input-wrap {
+        padding: 11px;
+    }
+}
+
+/* SEARCH RESULT COUNT */
+.gn-search-count {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* SEARCH RESULT */
+.gn-search-result {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px;
+    margin-bottom: 8px;
+    border: 1px solid #29292e;
+    border-radius: 9px;
+    background: #18181b;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.gn-search-result:hover {
+    background: #222226;
+    border-color: #ff4b2b;
+    transform: translateX(3px);
+}
+
+.gn-result-image,
+.gn-result-placeholder {
+    width: 90px;
+    height: 65px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.gn-result-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #29292e;
+    color: #ff4b2b;
+    font-size: 25px;
+}
+
+.gn-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.gn-result-info small {
+    color: #ff4b2b;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.gn-result-info h6 {
+    color: #fff;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.gn-result-info p {
+    color: #999;
+    font-size: 12px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gn-result-arrow {
+    color: #ff4b2b;
+    font-size: 17px;
+}
+
+.gn-search-empty {
+    text-align: center;
+    padding: 35px 15px;
+    color: #999;
+}
+
+.gn-search-empty > i {
+    font-size: 35px;
+    color: #ff4b2b;
+}
+
+.gn-search-empty h6 {
+    color: #fff;
+    margin-top: 12px;
+}
+
+.gn-search-empty p {
+    font-size: 13px;
+}
+
+@media(max-width: 480px) {
+    .gn-result-image,
+    .gn-result-placeholder {
+        width: 70px;
+        height: 58px;
+    }
+
+    .gn-result-info h6 {
+        font-size: 12px;
+    }
+
+    .gn-result-info p {
+        font-size: 11px;
+    }
+}
+
+</style>
+</head>
+<body>
+
+
+
+<!-- Dynamic Gaming News Ticker -->
+<div class="ticker-bar">
+    <div class="ticker-track" id="tickerTrack">
+        <span>
+            <span class="live-tag">
+                <span class="pulse-dot"></span>
+                LATEST
+            </span>
+            LOADING GAMING NEWS...
+        </span>
+    </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-mmr sticky-top">
+  <div class="container">
+
+    <!-- Logo -->
+    <a class="navbar-brand brand-mark d-flex align-items-center gap-2" href="index.html">
+      <img src="images/game-nexus-logo.png"
+           alt="GAME NEXUS Logo"
+           class="navbar-logo">
+      <span>GAME NEXUS<span class="dot">.</span></span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler border-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navMain"
+            style="color:#fff;">
+      <i class="bi bi-list text-white fs-2"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMain">
+
+      <!-- Navigation Links -->
+      <ul class="navbar-nav mx-auto nav-mmr mt-3 mt-lg-0">
+
+        <li class="nav-item" id="adminNavItem" style="display:none;">
+          <a class="nav-link" href="admin.html">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" href="index.html">Home</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html">Blog</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">About</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="contact.html">Contact</a>
+        </li>
+
+      </ul>
+
+      <!-- Navbar Actions -->
+      <div class="d-flex align-items-center gap-2 flex-wrap mt-3 mt-lg-0">
+
+        <!-- Search Button -->
+        <button type="button"
+                class="btn btn-search-mmr"
+                id="openSearchBtn"
+                aria-label="Search articles"
+                title="Search GAME NEXUS">
+          <i class="bi bi-search"></i>
+          <span class="d-lg-none ms-2">Search Articles</span>
+        </button>
+
+        <!-- Submit Tip -->
+        <a href="contact.html"
+           class="btn btn-signal">
+          Submit a Tip
+        </a>
+
+        <!-- Authentication -->
+        <div id="authNav">
+          <a href="login.html" class="btn btn-outline-mmr">
+            <i class="bi bi-person-circle me-1"></i> Sign In
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Search Panel -->
+<div class="gn-search-overlay" id="gnSearchOverlay">
+  <div class="gn-search-box">
+
+    <div class="gn-search-header">
+      <div>
+        <h5><i class="bi bi-search me-2"></i>Search GAME NEXUS</h5>
+        <p>Find gaming news, reviews, updates and more.</p>
+      </div>
+
+      <button type="button" id="closeSearchBtn" aria-label="Close search">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="gn-search-input-wrap">
+      <i class="bi bi-search"></i>
+      <input type="search"
+             id="gnSearchInput"
+             placeholder="Search GTA 6, PlayStation, Xbox, Valorant..."
+             autocomplete="off">
+      <span>ESC</span>
+    </div>
+
+    <div id="gnSearchResults" class="gn-search-results">
+      <p class="gn-search-hint">
+        Start typing to discover gaming articles.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="eyebrow">Season 14 · Blog Report</div>
+        <h1 class="hero-headline mt-3">LEVEL UP<br><span class="stroke">YOUR GAMING</span> EXPERIENCE</h1>
+        <p class="hero-sub mt-4">GAME NEXUS is your trusted destination for everything related to gaming. We bring you the latest gaming news, detailed reviews, expert guides, esports coverage, hardware recommendations, and industry updates—all in one place. Whether you're a casual player or a competitive gamer, GAME NEXUS helps you stay ahead in the gaming world.</p>
+        <div class="d-flex gap-3 mt-4">
+          <a href="blog.html" class="btn btn-signal">Read the Log <i class="bi bi-arrow-right ms-1"></i></a>
+          <a href="about.html" class="btn btn-outline-mmr">Who's Behind This</a>
+        </div>
+        <div class="row hero-stats">
+          <div class="col-4">
+            <div class="stat-num">2.4M<span class="text-signal">+</span></div>
+            <div class="stat-label">Ranked Games Reviewed</div>
+          </div>
+          <div class="col-4">
+            <div class="stat-num">180<span class="text-signal">+</span></div>
+            <div class="stat-label">Pro POV Breakdowns</div>
+          </div>
+          <div class="col-4">
+            <div class="stat-num">96<span class="text-signal">%</span></div>
+            <div class="stat-label">Patch Call Accuracy</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-visual">
+          <div class="grid-overlay">
+            <img src="images/starting page.png" alt="Hero Visual" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="rank-tag">RANK: CHALLENGER</div>
+          <div class="rank-badge">S14<br>META</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- Featured post -->
+<section class="py-4">
+  <div class="container">
+    <div class="eyebrow">Editor's Pick</div>
+
+    <div class="featured-post row g-0 mt-3 hud-frame">
+      <span class="hud-bl"></span>
+      <span class="hud-br"></span>
+
+      <div class="col-lg-6">
+        <div class="featured-thumb">
+          <img
+            src="images/hero-image6.jpg"
+            alt="GTA 6 Macca and Friends"
+            style="width:100%;height:100%;object-fit:cover;"
+          >
+        </div>
+      </div>
+
+      <div class="col-lg-6 d-flex align-items-center">
+        <div class="p-4 p-lg-5">
+          <h2 class="section-title mt-2"
+              style="font-size:clamp(1.6rem,2.6vw,2.2rem);">
+            GTA 6: Macca and Friends Animated TV Show
+          </h2>
+
+          <p class="post-excerpt mt-3">
+            Discover the details behind the animated TV show connected
+            to Grand Theft Auto 6 and what it could mean for the GTA universe.
+          </p>
+
+          <a
+            href="post.html?slug=gta-6-macca-and-friends-animated-tv-show"
+            class="btn btn-outline-mmr mt-2">
+            Read Full Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Latest posts -->
+<section class="py-5 mt-3">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+      <div>
+        <div class="eyebrow">Fresh From the Queue</div>
+        <h2 class="section-title">LATEST DISPATCHES</h2>
+      </div>
+      <a href="blog.html" class="btn btn-outline-mmr">View All Posts</a>
+    </div>
+
+    <div class="row g-4 mt-2" id="postGrid">
+        <p class="text-muted">Loading latest articles...</p>
+</div>
+      
+</section>
+
+</section>
+
+<!-- Most Liked Articles -->
+<section class="py-5 mt-3">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <div class="eyebrow">Community Favorites</div>
+                <h2 class="section-title">MOST LIKED ARTICLES</h2>
+            </div>
+            <a href="blog.html" class="btn btn-outline-mmr">Explore Blog</a>
+        </div>
+
+        <div class="row g-4 mt-2" id="mostLikedGrid">
+            <p class="text-muted">Loading popular articles...</p>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter band -->
+<section class="band-signal py-5">
+<!-- Newsletter band -->
+<section class="band-signal py-5">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <div class="eyebrow">Weekly Digest</div>
+        <h2 class="section-title" style="font-size:clamp(1.5rem,2.4vw,2rem);">GET THE PATCH BREAKDOWN BEFORE YOUR NEXT QUEUE</h2>
+        <p class="hero-sub mt-2">One email, every Friday. No fluff — just what changed and how to play around it.</p>
+      </div>
+      <div class="col-lg-6">
+        <form class="form-mmr" id="newsletterForm">
+          <div class="input-group">
+            <input type="email" class="form-control" placeholder="you@email.com" required id="newsletterEmail">
+            <button class="btn btn-signal" type="submit">Subscribe</button>
+          </div>
+          <div class="font-mono small mt-2" id="newsletterMsg" style="color:var(--live);display:none;">
+            <i class="bi bi-check-circle me-1"></i>You're on the list. First drop lands Friday.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Rank rail / sidebar-style section -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="widget">
+          <div class="widget-title">Most Read This Week</div>
+          <div class="rank-list-item"><span class="rank-num text-signal">01</span><a href="post.html" class="post-title" style="font-size:.95rem;">The Rotation That Won Worlds</a></div>
+          <div class="rank-list-item"><span class="rank-num">02</span><a href="post.html" class="post-title" style="font-size:.95rem;">Patch 14.3: Three Nerfs to Watch</a></div>
+          <div class="rank-list-item"><span class="rank-num">03</span><a href="post.html" class="post-title" style="font-size:.95rem;">Mouse Input Lag, Actually Tested</a></div>
+          <div class="rank-list-item"><span class="rank-num">04</span><a href="post.html" class="post-title" style="font-size:.95rem;">Draft Priority in Best-of-Fives</a></div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="widget">
+          <div class="widget-title">Browse By Tag</div>
+          <a href="blog.html" class="tag-pill">#meta</a>
+          <a href="blog.html" class="tag-pill">#pc</a>
+          <a href="blog.html" class="tag-pill">#playstation</a>
+          <a href="blog.html" class="tag-pill">#xbox</a>
+          <a href="blog.html" class="tag-pill">#pokemon</a>
+          <a href="blog.html" class="tag-pill">#skyrim</a>
+          <a href="blog.html" class="tag-pill">#coaching</a>
+          <a href="blog.html" class="tag-pill">#draft</a>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="widget">
+          <div class="widget-title">Follow the Desk</div>
+          <p class="hero-sub" style="font-size:.88rem;">Clips, quick takes, and queue screenshots between full posts.</p>
+          <div class="d-flex gap-2 mt-2">
+            <a href="#" class="social-icon"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="social-icon"><i class="bi bi-twitch"></i></a>
+            <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+            <a href="#" class="social-icon"><i class="bi bi-discord"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="pt-5 pb-4">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <a href="index.html" class="brand-mark">GAME NEXUS  <span class="dot">.</span></a>
+        <p class="hero-sub mt-3" style="font-size:.88rem;">Ranked reports, patch breakdowns, and honest gear reviews from a desk that still plays the game it writes about.</p>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Navigate</div>
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="blog.html" class="footer-link">Blog</a>
+        <a href="about.html" class="footer-link">About</a>
+        <a href="contact.html" class="footer-link">Contact</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Topics</div>
+        <a href="blog.html" class="footer-link">playstation</a>
+        <a href="blog.html" class="footer-link">Pc</a>
+        <a href="blog.html" class="footer-link">Xbox</a>
+        <a href="blog.html" class="footer-link">Skyrim</a>
+      </div>
+      <div class="col-lg-4">
+        <div class="footer-title">Server Status</div>
+        <p class="font-mono" style="font-size:.78rem;color:var(--muted);">
+          NA: <span class="text-live">ONLINE</span><br>
+          EU: <span class="text-live">ONLINE</span><br>
+          APAC: <span class="text-gold">DEGRADED</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom py-3 mt-4">
+    <div class="container d-flex justify-content-between flex-wrap gap-2">
+      <span>© 2026 GAME NEXUS. All rights reserved.</span>
+      <span>BUILT FOR THE LADDER · PATCH 14.3</span>
+    </div>
+  </div>
+</footer>
+
+<button id="backToTop"><i class="bi bi-arrow-up"></i></button>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(function(){
+
+  
+ // Newsletter form - Connect to FastAPI and PostgreSQL
+$('#newsletterForm').on('submit', async function(e) {
+    e.preventDefault();
+
+    const emailInput = $('#newsletterEmail');
+    const message = $('#newsletterMsg');
+    const submitButton = $('#newsletterForm button[type="submit"]');
+
+    const email = emailInput.val().trim();
+
+    if (!emailInput[0].checkValidity()) {
+        emailInput[0].reportValidity();
+        return;
+    }
+
+    submitButton.prop('disabled', true).text('Subscribing...');
+
+    try {
+        const response = await fetch('/api/newsletter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || 'Subscription failed.');
+        }
+
+        message
+    .text(result.message || 'Subscription completed.')
+    .css('color', 'var(--live)')
+    .fadeIn();
+
+        emailInput.val('');
+
+    } catch (error) {
+        console.error('Newsletter subscription error:', error);
+
+        message
+            .text(error.message || 'Something went wrong. Please try again.')
+            .css('color', '#ff4b2b')
+            .fadeIn();
+
+    } finally {
+        submitButton.prop('disabled', false).text('Subscribe');
+    }
+});
+
+  // Back to top
+  $(window).on('scroll', function(){
+    if($(this).scrollTop() > 400){ $('#backToTop').fadeIn(150).css('display','flex'); }
+    else { $('#backToTop').fadeOut(150); }
+  });
+  $('#backToTop').on('click', function(){
+    $('html, body').animate({scrollTop:0}, 500);
+  });
+
+  // Reveal-on-scroll for post cards
+  var cards = $('.post-card, .featured-post');
+  cards.css({opacity:0, transform:'translateY(16px)'});
+  function reveal(){
+    cards.each(function(){
+      var top = $(this).offset().top;
+      if(top < $(window).scrollTop() + $(window).height() - 80){
+        $(this).stop().animate({opacity:1}, 400);
+        $(this).css('transform','translateY(0)');
+      }
+    });
+  }
+  $(this).css('transition','opacity .4s ease, transform .4s ease');
+  cards.css('transition','opacity .5s ease, transform .5s ease');
+  reveal();
+  $(window).on('scroll', reveal);
+});
+
+// NEW DYNAMIC NAVBAR JAVASCRIPT — ADD BELOW
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const authNav = document.getElementById('authNav');
+    const adminNavItem = document.getElementById('adminNavItem');
+
+    if (!authNav) return;
+
+    try {
+        const response = await fetch('/api/auth/me', {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+
+        if (response.ok) {
+            const user = await response.json();
+
+            // Show Admin Panel only for administrators
+            if (adminNavItem) {
+                adminNavItem.style.display =
+                    user.is_admin === true ? '' : 'none';
+            }
+
+            authNav.innerHTML = `
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <a href="profile.html" class="btn btn-outline-mmr">
+                        <i class="bi bi-person-circle me-1"></i>
+                        ${escapeHTML(user.gamer_tag)}
+                    </a>
+
+                    <button id="logoutBtn" class="btn btn-signal">
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        Logout
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('logoutBtn')
+                .addEventListener('click', async function () {
+                    const logoutResponse = await fetch(
+                        '/api/auth/logout',
+                        {
+                            method: 'POST',
+                            credentials: 'same-origin'
+                        }
+                    );
+
+                    if (logoutResponse.ok) {
+                        window.location.href = '/index.html';
+                    } else {
+                        alert('Logout failed. Please try again.');
+                    }
+                });
+
+        } else {
+            authNav.innerHTML = `
+                <a href="login.html" class="btn btn-outline-mmr">
+                    <i class="bi bi-person-circle me-1"></i>
+                    Sign In
+                </a>
+            `;
+
+            if (adminNavItem) {
+                adminNavItem.style.display = 'none';
+            }
+        }
+
+    } catch (error) {
+        console.error('Authentication check failed:', error);
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? '').replace(/[&<>"']/g, function (char) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }[char];
+        });
+    }
+});
+
+
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () { 
+    const postGrid = document.getElementById("postGrid");
+
+    if (!postGrid) return;
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[char];
+        });
+    }
+
+    try {
+        const response = await fetch("/api/posts");
+
+        if (!response.ok) {
+            throw new Error("Unable to load articles");
+        }
+
+        const posts = await response.json();
+
+        if (!posts.length) {
+            postGrid.innerHTML =
+                '<p class="text-muted">No published articles available yet.</p>';
+            return;
+        }
+
+        postGrid.innerHTML = posts.map(post => {
+            const image = post.image_path
+                ? `<img src="${escapeHTML(post.image_path)}"
+                     class="img-fluid w-100"
+                     alt="${escapeHTML(post.title)}"
+                     style="height:200px; object-fit:cover;">`
+                : "";
+
+            const date = post.created_at
+                ? new Date(post.created_at).toLocaleDateString()
+                : "";
+
+            return `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="card h-100"><article class="card post-card h-100">
+                        ${image}
+                        <div class="card-body">
+                            <small class="text-muted">
+                                ${escapeHTML(post.category)}
+                                ${date ? " · " + escapeHTML(date) : ""}
+                            </small>
+
+                            <h5 class="card-title mt-2">
+                                ${escapeHTML(post.title)}
+                            </h5>
+
+                            <p class="card-text">
+                                ${escapeHTML(post.excerpt)}
+                            </p>
+
+                            <a href="post.html?slug=${encodeURIComponent(post.slug)}"
+                               class="btn btn-primary">
+                                Read More
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Articles loading error:", error);
+        postGrid.innerHTML =
+            '<p class="text-danger">Unable to load articles. Please try again later.</p>';
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        const response = await fetch("/api/auth/me", {
+            credentials: "same-origin"
+        });
+
+        if (!response.ok) return;
+
+        const user = await response.json();
+
+        if (user.is_admin === true) {
+            document.getElementById("adminNavItem").style.display = "";
+        }
+    } catch (error) {
+        console.error("Admin check failed:", error);
+    }
+});
+
+// Load Most Liked Articles
+document.addEventListener("DOMContentLoaded", async function () {
+    const grid = document.getElementById("mostLikedGrid");
+
+    if (!grid) return;
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[char];
+        });
+    }
+
+    try {
+        const response = await fetch("/api/most-liked-posts");
+
+        if (!response.ok) {
+            throw new Error("Unable to load popular articles.");
+        }
+
+        const posts = await response.json();
+
+        if (!posts.length) {
+            grid.innerHTML =
+                '<p class="text-muted">No popular articles available yet.</p>';
+            return;
+        }
+
+        grid.innerHTML = posts.map(post => {
+            const image = post.image_path
+                ? `<img src="${escapeHTML(post.image_path)}"
+                     alt="${escapeHTML(post.title)}">`
+                : "";
+
+            const date = post.created_at
+                ? new Date(post.created_at).toLocaleDateString()
+                : "";
+
+            return `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="card post-card h-100">
+                        ${image}
+
+                        <div class="card-body">
+                            <small class="text-signal">
+                                ${escapeHTML(post.category)}
+                                ${date ? " · " + escapeHTML(date) : ""}
+                            </small>
+
+                            <h5 class="card-title mt-2">
+                                ${escapeHTML(post.title)}
+                            </h5>
+
+                            <p class="card-text">
+                                ${escapeHTML(post.excerpt)}
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="text-signal">
+                                    <i class="bi bi-heart-fill"></i>
+                                    ${post.like_count} Likes
+                                </span>
+
+                                <a href="post.html?slug=${encodeURIComponent(post.slug)}"
+                                   class="btn btn-primary">
+                                    Read Article
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Most liked articles error:", error);
+        grid.innerHTML =
+            '<p class="text-danger">Unable to load popular articles.</p>';
+    }
+});
+
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    const tickerTrack = document.getElementById("tickerTrack");
+
+    if (!tickerTrack) return;
+
+    try {
+        const response = await fetch("/api/posts?limit=5");
+
+        if (!response.ok) {
+            throw new Error("Could not load articles");
+        }
+
+        const data = await response.json();
+
+        const posts = Array.isArray(data) ? data : data.items;
+
+        if (!posts || posts.length === 0) {
+            tickerTrack.textContent = "NO PUBLISHED ARTICLES YET";
+            return;
+        }
+
+        // Create ticker headlines
+        function createHeadline(post, index) {
+            const span = document.createElement("span");
+
+            if (index === 0) {
+                const liveTag = document.createElement("span");
+                liveTag.className = "live-tag";
+                liveTag.innerHTML =
+                    '<span class="pulse-dot"></span> LATEST';
+
+                span.appendChild(liveTag);
+            }
+
+            span.appendChild(
+                document.createTextNode(" " + post.title)
+            );
+
+            return span;
+        }
+
+        // Show the five newest published articles
+        const headlines = posts.slice(0, 5);
+
+        // Duplicate headlines for continuous scrolling
+        tickerTrack.innerHTML = "";
+
+        for (let repeat = 0; repeat < 2; repeat++) {
+            headlines.forEach((post, index) => {
+                tickerTrack.appendChild(
+                    createHeadline(post, index)
+                );
+            });
+        }
+
+    } catch (error) {
+        console.error("Gaming ticker error:", error);
+        tickerTrack.textContent =
+            "GAME NEXUS — LATEST GAMING NEWS";
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openBtn = document.getElementById("openSearchBtn");
+    const closeBtn = document.getElementById("closeSearchBtn");
+    const overlay = document.getElementById("gnSearchOverlay");
+    const searchInput = document.getElementById("gnSearchInput");
+    const resultsContainer = document.getElementById("gnSearchResults");
+
+    if (!openBtn || !closeBtn || !overlay || !searchInput || !resultsContainer) {
+        console.warn("GAME NEXUS search elements not found.");
+        return;
+    }
+
+    let allPosts = [];
+    let postsLoaded = false;
+    let loadingPosts = false;
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[char];
+        });
+    }
+
+    // OPEN SEARCH
+    async function openSearch() {
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        searchInput.focus();
+
+        if (!postsLoaded && !loadingPosts) {
+            await loadPosts();
+        }
+    }
+
+    // CLOSE SEARCH
+    function closeSearch() {
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+        searchInput.value = "";
+
+        resultsContainer.innerHTML = `
+            <p class="gn-search-hint">
+                Start typing to discover gaming articles.
+            </p>
+        `;
+    }
+
+    // LOAD PUBLISHED ARTICLES
+    async function loadPosts() {
+
+        loadingPosts = true;
+
+        resultsContainer.innerHTML = `
+            <p class="gn-search-hint">
+                <i class="bi bi-arrow-repeat"></i>
+                Loading gaming articles...
+            </p>
+        `;
+
+        try {
+            const response = await fetch("/api/posts", {
+                method: "GET",
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) {
+                throw new Error("Unable to load articles.");
+            }
+
+            const data = await response.json();
+
+            allPosts = Array.isArray(data) ? data : (data.items || []);
+            postsLoaded = true;
+
+            resultsContainer.innerHTML = `
+                <p class="gn-search-hint">
+                    Search across ${allPosts.length} published articles.
+                </p>
+            `;
+
+            // Handle typing that happened while loading
+            if (searchInput.value.trim()) {
+                searchArticles(searchInput.value);
+            }
+
+        } catch (error) {
+            console.error("Search loading error:", error);
+
+            resultsContainer.innerHTML = `
+                <p class="gn-search-hint">
+                    Unable to load articles. Please try again.
+                </p>
+            `;
+        } finally {
+            loadingPosts = false;
+        }
+    }
+
+    // SEARCH ARTICLES
+    function searchArticles(query) {
+
+        const keyword = query.trim().toLowerCase();
+
+        if (!keyword) {
+            resultsContainer.innerHTML = `
+                <p class="gn-search-hint">
+                    Start typing to discover gaming articles.
+                </p>
+            `;
+            return;
+        }
+
+        if (!postsLoaded) return;
+
+        const matches = allPosts.filter(post => {
+
+            const searchableText = [
+                post.title,
+                post.category,
+                post.excerpt,
+                post.content,
+                post.article_content,
+                post.body,
+                post.slug
+            ].join(" ").toLowerCase();
+
+            return searchableText.includes(keyword);
+        });
+
+        if (matches.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="gn-search-empty">
+                    <i class="bi bi-search"></i>
+                    <h6>No articles found</h6>
+                    <p>Try another keyword or game title.</p>
+                </div>
+            `;
+            return;
+        }
+
+        resultsContainer.innerHTML = `
+            <div class="gn-search-count">
+                ${matches.length} article${matches.length === 1 ? "" : "s"} found
+            </div>
+
+            ${matches.slice(0, 20).map(post => {
+
+                const image = post.image_path
+                    ? `
+                        <img
+                            src="${escapeHTML(post.image_path)}"
+                            alt="${escapeHTML(post.title)}"
+                            class="gn-result-image"
+                        >
+                    `
+                    : `
+                        <div class="gn-result-placeholder">
+                            <i class="bi bi-controller"></i>
+                        </div>
+                    `;
+
+                return `
+                    <a class="gn-search-result"
+                       href="post.html?slug=${encodeURIComponent(post.slug)}">
+
+                        ${image}
+
+                        <div class="gn-result-info">
+                            <small>${escapeHTML(post.category || "Gaming News")}</small>
+                            <h6>${escapeHTML(post.title)}</h6>
+                            <p>${escapeHTML(post.excerpt || "")}</p>
+                        </div>
+
+                        <i class="bi bi-arrow-up-right gn-result-arrow"></i>
+
+                    </a>
+                `;
+
+            }).join("")}
+        `;
+
+    }
+
+    // SEARCH EVENTS
+    openBtn.addEventListener("click", openSearch);
+    closeBtn.addEventListener("click", closeSearch);
+
+    searchInput.addEventListener("input", function () {
+        searchArticles(this.value);
+    });
+
+    overlay.addEventListener("click", function (event) {
+        if (event.target === overlay) {
+            closeSearch();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape" && overlay.classList.contains("active")) {
+            closeSearch();
+        }
+
+        if (
+            (event.ctrlKey || event.metaKey) &&
+            event.key.toLowerCase() === "k"
+        ) {
+            event.preventDefault();
+            openSearch();
+        }
+
+    });
+
+});
+
+</script>
+</body>
+</html>

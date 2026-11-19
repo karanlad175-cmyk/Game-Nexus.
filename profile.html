@@ -1,0 +1,626 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | GAME NEXUS</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #09090B;
+            color: #FAFAFA;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #121214;
+            border-bottom: 1px solid #29292e;
+        }
+
+        .navbar-brand {
+            color: #FAFAFA;
+            font-weight: 800;
+        }
+
+        .profile-card {
+            background: #18181B;
+            border: 1px solid #303036;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 650px;
+            margin: 60px auto;
+        }
+
+        .avatar {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: #6366F1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 18px;
+        }
+
+        .info-box {
+            background: #121214;
+            border: 1px solid #303036;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 15px;
+        }
+
+        .info-label {
+            color: #a1a1aa;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .btn-primary {
+            background: #6366F1;
+            border-color: #6366F1;
+        }
+
+        .btn-primary:hover {
+            background: #4F46E5;
+            border-color: #4F46E5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                GAME NEXUS
+            </a>
+
+            <a href="index.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-house me-1"></i> Home
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="profile-card text-center">
+
+            <div class="avatar" id="profileAvatar">
+    G
+</div>
+
+            <h2>My Profile</h2>
+            <p class="text-secondary">Welcome to your GAME NEXUS account</p>
+
+            <div class="text-start mt-4">
+
+                <div class="info-box text-start">
+    <label class="info-label" for="gamerTag">Gamer Tag</label>
+    <input
+        type="text"
+        id="gamerTag"
+        class="form-control bg-dark text-white border-secondary"
+        minlength="3"
+        maxlength="40"
+        required
+    >
+</div>
+
+<div class="info-box text-start">
+    <label class="info-label" for="email">Email Address</label>
+    <input
+        type="email"
+        id="email"
+        class="form-control bg-dark text-white border-secondary"
+        maxlength="320"
+        required
+    >
+</div>
+
+                <div class="info-box">
+                    <div class="info-label">Account ID</div>
+                    <div class="info-value" id="userId">Loading...</div>
+                </div>
+
+                <div class="info-box">
+    <div class="info-label">Account Created</div>
+    <div class="info-value" id="createdAt">Loading...</div>
+</div>
+
+                <div class="info-box">
+                    <div class="info-label">Account Role</div>
+                    <div class="info-value" id="userRole">Loading...</div>
+                </div>
+
+            </div>
+
+            <!-- My Comment History -->
+<div class="info-box text-start mt-4">
+    <h5 class="mb-3">
+        <i class="bi bi-chat-left-text me-2"></i>
+        My Comment History
+    </h5>
+
+    <div id="commentHistory">
+        <p class="text-secondary mb-0">Loading comments...</p>
+    </div>
+</div>
+
+</div>
+
+<!-- My Saved Articles -->
+<div class="info-box text-start mt-4">
+    <h5 class="mb-3">
+        <i class="bi bi-bookmark-star me-2"></i>
+        My Saved Articles
+    </h5>
+
+    <div id="savedArticles">
+        <p class="text-secondary mb-0">Loading saved articles...</p>
+    </div>
+</div>
+
+
+<!-- Change Password Section -->
+<div class="info-box text-start mt-4">
+    <h5 class="mb-3">
+        <i class="bi bi-shield-lock me-2"></i>
+        Change Password
+    </h5>
+
+    <label class="info-label" for="currentPassword">
+        Current Password
+    </label>
+    <input
+        type="password"
+        id="currentPassword"
+        class="form-control bg-dark text-white border-secondary mb-3"
+        required
+    >
+
+    <label class="info-label" for="newPassword">
+        New Password
+    </label>
+    <input
+        type="password"
+        id="newPassword"
+        class="form-control bg-dark text-white border-secondary mb-3"
+        minlength="8"
+        maxlength="128"
+        required
+    >
+
+    <label class="info-label" for="confirmPassword">
+        Confirm New Password
+    </label>
+    <input
+        type="password"
+        id="confirmPassword"
+        class="form-control bg-dark text-white border-secondary mb-3"
+        required
+    >
+
+    <button id="changePasswordBtn" class="btn btn-primary w-100">
+        <i class="bi bi-key me-2"></i>
+        Change Password
+    </button>
+
+    <div id="passwordMessage" class="mt-3"></div>
+</div>
+
+            <div id="errorMessage" class="text-danger mt-3"></div>
+            <button id="saveProfileBtn" class="btn btn-primary w-100 mt-3">
+    <i class="bi bi-check-circle me-2"></i>
+    Save Changes
+</button>
+
+<div id="profileMessage" class="mt-3"></div>
+
+            <button id="logoutBtn" class="btn btn-primary w-100 mt-4">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                Logout
+            </button>
+
+        </div>
+    </main>
+
+    <script>
+        
+document.addEventListener('DOMContentLoaded', loadProfile);
+
+async function loadCommentHistory() {
+    const container = document.getElementById('commentHistory');
+
+    try {
+        const response = await fetch('/api/my-comments', {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            throw new Error('Unable to load comment history.');
+        }
+
+        const comments = await response.json();
+
+        if (comments.length === 0) {
+            container.innerHTML =
+                '<p class="text-secondary mb-0">You have not posted any comments yet.</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+
+        comments.forEach(comment => {
+            const card = document.createElement('div');
+            card.className = 'info-box mb-3';
+
+            const title = document.createElement('h6');
+            title.className = 'text-white';
+            title.textContent = comment.post_title;
+
+            const body = document.createElement('p');
+            body.className = 'text-secondary mb-2';
+            body.textContent = comment.body;
+
+            const date = document.createElement('small');
+            date.className = 'text-secondary';
+            date.textContent = new Date(comment.created_at).toLocaleDateString('en-IN');
+
+            const status = document.createElement('span');
+            status.className = comment.status === 'Approved'
+                ? 'badge bg-success ms-2'
+                : 'badge bg-warning text-dark ms-2';
+            status.textContent = comment.status;
+
+            card.appendChild(title);
+            card.appendChild(body);
+            card.appendChild(date);
+            card.appendChild(status);
+
+            container.appendChild(card);
+        });
+
+    } catch (error) {
+        container.textContent = error.message;
+    }
+}
+
+async function loadSavedArticles() {
+    const container = document.getElementById('savedArticles');
+
+    try {
+        const response = await fetch('/api/my-bookmarks', {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            throw new Error('Unable to load saved articles.');
+        }
+
+        const articles = await response.json();
+
+        if (articles.length === 0) {
+            container.innerHTML =
+                '<p class="text-secondary mb-0">You have not saved any articles yet.</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+
+        articles.forEach(article => {
+            const card = document.createElement('div');
+            card.className = 'info-box mb-3';
+
+            const title = document.createElement('h6');
+            title.className = 'text-white';
+            title.textContent = article.title;
+
+            const excerpt = document.createElement('p');
+            excerpt.className = 'text-secondary mb-2';
+            excerpt.textContent = article.excerpt || '';
+
+            const category = document.createElement('small');
+            category.className = 'text-secondary d-block mb-3';
+            category.textContent = article.category || 'Gaming';
+
+            const buttonGroup = document.createElement('div');
+            buttonGroup.className = 'd-flex gap-2';
+
+            const openButton = document.createElement('a');
+            openButton.className = 'btn btn-primary btn-sm';
+            openButton.href = `post.html?slug=${encodeURIComponent(article.slug)}`;
+            openButton.innerHTML = '<i class="bi bi-box-arrow-up-right me-1"></i> Open Article';
+
+            const removeButton = document.createElement('button');
+            removeButton.className = 'btn btn-outline-danger btn-sm';
+            removeButton.innerHTML = '<i class="bi bi-bookmark-x me-1"></i> Remove';
+
+            removeButton.addEventListener('click', () => {
+                removeSavedArticle(article.slug, removeButton);
+            });
+
+            buttonGroup.appendChild(openButton);
+            buttonGroup.appendChild(removeButton);
+
+            card.appendChild(title);
+            card.appendChild(excerpt);
+            card.appendChild(category);
+            card.appendChild(buttonGroup);
+
+            container.appendChild(card);
+        });
+
+    } catch (error) {
+        container.textContent = error.message;
+    }
+}
+
+async function removeSavedArticle(slug, button) {
+    if (!confirm('Remove this article from your saved articles?')) {
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Removing...';
+
+    try {
+        const response = await fetch(
+            `/api/bookmarks/${encodeURIComponent(slug)}`,
+            {
+                method: 'DELETE',
+                credentials: 'same-origin'
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Unable to remove bookmark.');
+        }
+
+        await loadSavedArticles();
+
+    } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+        button.textContent = 'Remove';
+    }
+}
+
+async function loadProfile() {
+    try {
+        const response = await fetch('/api/auth/me', {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Unable to load profile.');
+        }
+
+        const user = await response.json();
+        loadCommentHistory();
+        loadSavedArticles();
+
+        document.getElementById('gamerTag').value =
+            user.gamer_tag || '';
+
+        document.getElementById('email').value =
+            user.email || '';
+
+        document.getElementById('userId').textContent =
+            user.id ?? 'Not available';
+
+        document.getElementById('userRole').textContent =
+            user.is_admin ? 'Administrator' : 'Regular User';
+
+            // Display first letter of Gamer Tag
+const avatar = document.getElementById('profileAvatar');
+avatar.textContent = (user.gamer_tag || 'G').charAt(0).toUpperCase();
+
+// Display account creation date
+const createdAt = document.getElementById('createdAt');
+
+if (user.created_at) {
+    const date = new Date(user.created_at);
+
+    createdAt.textContent = date.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+} else {
+    createdAt.textContent = 'Not available';
+}
+
+    } catch (error) {
+        showMessage(error.message, 'danger');
+    }
+}
+
+document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+
+async function saveProfile() {
+    const gamer_tag = document.getElementById('gamerTag').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    if (gamer_tag.length < 3 || gamer_tag.length > 40) {
+        showMessage('Gamer Tag must be between 3 and 40 characters.', 'danger');
+        return;
+    }
+
+    if (!email) {
+        showMessage('Please enter a valid email address.', 'danger');
+        return;
+    }
+
+    const button = document.getElementById('saveProfileBtn');
+    button.disabled = true;
+    button.textContent = 'Saving...';
+
+    try {
+        const response = await fetch('/api/auth/profile', {
+            method: 'PUT',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                gamer_tag: gamer_tag,
+                email: email
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Profile update failed.');
+        }
+
+        document.getElementById('gamerTag').value = data.gamer_tag;
+        document.getElementById('profileAvatar').textContent =
+        (data.gamer_tag || 'G').charAt(0).toUpperCase();
+        document.getElementById('email').value = data.email;
+
+        showMessage('Profile updated successfully!', 'success');
+
+    } catch (error) {
+        showMessage(error.message, 'danger');
+    } finally {
+        button.disabled = false;
+        button.innerHTML =
+            '<i class="bi bi-check-circle me-2"></i> Save Changes';
+    }
+}
+
+function showMessage(message, type) {
+    const element = document.getElementById('profileMessage');
+
+    element.innerHTML = '';
+
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+
+    element.appendChild(alert);
+}
+
+document.getElementById('logoutBtn').addEventListener('click', async function () {
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'same-origin'
+        });
+
+        if (response.ok) {
+            window.location.href = '/login.html';
+        } else {
+            alert('Logout failed. Please try again.');
+        }
+    } catch (error) {
+        alert('Server connection failed.');
+    }
+});
+
+document.getElementById('changePasswordBtn')
+    .addEventListener('click', changePassword);
+
+async function changePassword() {
+    const currentPassword =
+        document.getElementById('currentPassword').value;
+
+    const newPassword =
+        document.getElementById('newPassword').value;
+
+    const confirmPassword =
+        document.getElementById('confirmPassword').value;
+
+    const message = document.getElementById('passwordMessage');
+    const button = document.getElementById('changePasswordBtn');
+
+    message.innerHTML = '';
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        showPasswordMessage('Please fill in all password fields.', 'danger');
+        return;
+    }
+
+    if (newPassword.length < 8 || newPassword.length > 128) {
+        showPasswordMessage('New password must be 8 to 128 characters.', 'danger');
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        showPasswordMessage('New passwords do not match.', 'danger');
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Updating...';
+
+    try {
+        const response = await fetch('/api/auth/change-password', {
+            method: 'PUT',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Password change failed.');
+        }
+
+        showPasswordMessage('Password changed successfully!', 'success');
+
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+
+    } catch (error) {
+        showPasswordMessage(error.message, 'danger');
+    } finally {
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-key me-2"></i> Change Password';
+    }
+}
+
+function showPasswordMessage(text, type) {
+    const message = document.getElementById('passwordMessage');
+    message.innerHTML = '';
+
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = text;
+
+    message.appendChild(alert);
+}
+
+    </script>
+
+</body>
+</html>

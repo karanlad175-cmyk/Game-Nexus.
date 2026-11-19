@@ -1,0 +1,682 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME NEXUS | Article</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #09090b;
+            color: #fafafa;
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+        }
+
+        header {
+            background: #121214;
+            padding: 20px 8%;
+            border-bottom: 1px solid #29292d;
+        }
+
+        header a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .category {
+            color: #a78bfa;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: clamp(30px, 5vw, 46px);
+            line-height: 1.25;
+            margin-bottom: 18px;
+        }
+
+        .date {
+            color: #999;
+            margin-bottom: 25px;
+        }
+
+        .hero {
+            width: 100%;
+            max-height: 460px;
+            object-fit: cover;
+            border-radius: 14px;
+            margin-bottom: 30px;
+        }
+
+        .excerpt {
+            color: #c4c4c8;
+            font-size: 19px;
+            margin-bottom: 30px;
+        }
+
+        .article-body {
+            color: #dedee2;
+            font-size: 17px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 40px;
+            color: #a78bfa;
+            text-decoration: none;
+        }
+
+        .message {
+            text-align: center;
+            color: #aaa;
+            padding: 60px 10px;
+        }
+        .article-body p {
+    margin-bottom: 22px;
+    line-height: 1.9;
+}
+
+.article-body {
+    color: #dedee2;
+    font-size: 17px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.hero {
+    display: block;
+    width: 100%;
+    max-height: 460px;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 30px;
+}
+
+.comments-section {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid #29292d;
+}
+
+.comments-section h2 {
+    margin-bottom: 25px;
+}
+
+.comment-item {
+    background: #121214;
+    border: 1px solid #29292d;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.comment-name {
+    color: #a78bfa;
+    font-weight: bold;
+}
+
+.comment-date {
+    color: #888;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.comment-text {
+    color: #dedee2;
+    margin-top: 10px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.comment-form {
+    margin-top: 30px;
+}
+
+.comment-form input,
+.comment-form textarea {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 15px;
+    background: #121214;
+    color: #fafafa;
+    border: 1px solid #393940;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.comment-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.comment-form button {
+    background: #6366f1;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.comment-form button:hover {
+    background: #4f46e5;
+}
+
+#commentMessage {
+    margin-top: 12px;
+    color: #a78bfa;
+}
+
+/* Article Bookmark Button */
+.bookmark-section {
+    margin: 25px 0 35px;
+}
+
+.bookmark-btn {
+    background: #6366f1;
+    color: white;
+    border: 1px solid #6366f1;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.bookmark-btn:hover {
+    background: #4f46e5;
+}
+
+.bookmark-btn.saved {
+    background: #121214;
+    border-color: #00e5a0;
+    color: #00e5a0;
+}
+
+.bookmark-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Article Like Button */
+.like-section {
+    margin: 15px 0 30px;
+}
+
+.like-btn {
+    background: #121214;
+    color: #ff4b2b;
+    border: 1px solid #ff4b2b;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.like-btn:hover,
+.like-btn.liked {
+    background: #ff4b2b;
+    color: white;
+}
+
+.like-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#likeMessage {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #a78bfa;
+}
+
+#bookmarkMessage {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #a78bfa;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <a href="index.html">GAME NEXUS</a>
+</header>
+
+<main class="container" id="article">
+    <div class="message">Loading article...</div>
+</main>
+
+<script>
+async function loadArticle() {
+    const article = document.getElementById("article");
+
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("slug");
+
+    if (!slug) {
+        article.innerHTML =
+            '<div class="message">Article not found. No article slug provided.</div>';
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "/api/posts/" + encodeURIComponent(slug)
+        );
+
+        if (!response.ok) {
+            throw new Error("Article not found.");
+        }
+
+        const post = await response.json();
+
+        const date = new Date(post.created_at).toLocaleDateString();
+
+        const image = post.image_path
+            ? post.image_path
+            : "images/hero-image4.jpg";
+
+        article.innerHTML = `
+            <div class="category">${escapeHTML(post.category)}</div>
+
+            <h1>${escapeHTML(post.title)}</h1>
+
+<div class="date">${date}</div>
+
+<div class="bookmark-section">
+    <button type="button" id="bookmarkBtn" class="bookmark-btn">
+        ☆ Save Article
+    </button>
+    <p id="bookmarkMessage"></p>
+</div>
+
+<div class="like-section">
+    <button type="button" id="likeBtn" class="like-btn">
+        ♥ Like <span id="likeCount">0</span>
+    </button>
+    <p id="likeMessage"></p>
+</div>
+
+            <img class="hero"
+                src="${escapeHTML(image)}"
+                alt="${escapeHTML(post.title)}"
+                onerror="this.style.display='none'">
+
+            <p class="excerpt">${escapeHTML(post.excerpt)}</p>
+
+            <div class="article-body">
+    ${post.body.split(/\n\s*\n/).map(paragraph =>
+        `<p>${escapeHTML(paragraph)}</p>`
+    ).join("")}
+</div>
+
+<section class="comments-section">
+    <h2>Comments</h2>
+
+    <div id="commentsList">
+        <p class="message">Loading comments...</p>
+    </div>
+
+    <form id="commentForm" class="comment-form">
+        <h3>Leave a Comment</h3>
+
+        <input
+            type="text"
+            id="commentName"
+            placeholder="Your name"
+            maxlength="100"
+            required
+        >
+
+        <textarea
+            id="commentBody"
+            placeholder="Write your comment..."
+            required
+        ></textarea>
+
+        <button type="submit">Post Comment</button>
+
+        <p id="commentMessage"></p>
+    </form>
+</section>
+
+<a class="back" href="blog.html">
+                ← Back to Blog
+            </a>
+        `;
+
+     setupComments(slug);
+     setupBookmark(slug);
+     setupLikes(slug);
+        document.title = post.title + " | GAME NEXUS";
+
+    } catch (error) {
+        article.innerHTML =
+            '<div class="message">Unable to load this article. It may not exist or may not be published.</div>';
+        console.error(error);
+    }
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+loadArticle();
+
+async function setupComments(slug) {
+    const commentsList = document.getElementById("commentsList");
+    const commentForm = document.getElementById("commentForm");
+    const commentMessage = document.getElementById("commentMessage");
+
+    function displayComment(comment) {
+        const date = comment.created_at
+            ? new Date(comment.created_at).toLocaleDateString()
+            : "";
+
+        return `
+            <div class="comment-item">
+                <span class="comment-name">
+                    ${escapeHTML(comment.display_name)}
+                </span>
+                <span class="comment-date">
+                    ${escapeHTML(date)}
+                </span>
+                <p class="comment-text">
+                    ${escapeHTML(comment.body)}
+                </p>
+            </div>
+        `;
+    }
+
+    // Load existing comments
+    try {
+        const response = await fetch(
+            `/api/posts/${encodeURIComponent(slug)}/comments`
+        );
+
+        if (!response.ok) {
+            throw new Error("Could not load comments");
+        }
+
+        const comments = await response.json();
+
+        commentsList.innerHTML = comments.length
+            ? comments.map(displayComment).join("")
+            : '<p class="message">No comments yet. Be the first to comment!</p>';
+
+    } catch (error) {
+        commentsList.innerHTML =
+            '<p class="message">Unable to load comments.</p>';
+        console.error(error);
+    }
+
+    // Submit a new comment
+    commentForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const display_name = document
+            .getElementById("commentName").value.trim();
+
+        const body = document
+            .getElementById("commentBody").value.trim();
+
+        if (!display_name || !body) {
+            commentMessage.textContent =
+                "Please enter your name and comment.";
+            return;
+        }
+
+        const submitButton = commentForm.querySelector("button");
+        submitButton.disabled = true;
+        commentMessage.textContent = "Submitting comment...";
+
+        try {
+            const response = await fetch(
+                `/api/posts/${encodeURIComponent(slug)}/comments`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        display_name: display_name,
+                        body: body
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.detail || "Could not submit comment."
+                );
+            }
+
+            // Show the successfully submitted comment
+            const emptyMessage = commentsList.querySelector(".message");
+            if (emptyMessage) emptyMessage.remove();
+
+            commentsList.insertAdjacentHTML(
+                "beforeend",
+                displayComment(result)
+            );
+
+            commentForm.reset();
+
+            commentMessage.textContent =
+            "Your comment has been submitted and is waiting for admin approval.";
+
+        } catch (error) {
+            commentMessage.textContent = error.message;
+            console.error(error);
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+}
+
+async function setupBookmark(slug) {
+    const button = document.getElementById("bookmarkBtn");
+    const message = document.getElementById("bookmarkMessage");
+
+    let isSaved = false;
+    let isLoggedIn = false;
+
+    try {
+        const authResponse = await fetch("/api/auth/me", {
+            credentials: "same-origin"
+        });
+
+        isLoggedIn = authResponse.ok;
+
+        if (isLoggedIn) {
+            const bookmarksResponse = await fetch("/api/my-bookmarks", {
+                credentials: "same-origin"
+            });
+
+            if (bookmarksResponse.ok) {
+                const bookmarks = await bookmarksResponse.json();
+                isSaved = bookmarks.some(item => item.slug === slug);
+            }
+        }
+
+        updateButton();
+
+    } catch (error) {
+        console.error("Bookmark status error:", error);
+    }
+
+    function updateButton() {
+        if (!isLoggedIn) {
+            button.innerHTML = "☆ Sign in to Save";
+            return;
+        }
+
+        button.classList.toggle("saved", isSaved);
+        button.innerHTML = isSaved
+            ? "✓ Saved — Remove Bookmark"
+            : "☆ Save Article";
+    }
+
+    button.addEventListener("click", async function() {
+        if (!isLoggedIn) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        button.disabled = true;
+        message.textContent = isSaved ? "Removing bookmark..." : "Saving article...";
+
+        try {
+            const response = await fetch(
+                `/api/bookmarks/${encodeURIComponent(slug)}`,
+                {
+                    method: isSaved ? "DELETE" : "POST",
+                    credentials: "same-origin"
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.detail || "Bookmark action failed.");
+            }
+
+            isSaved = !isSaved;
+            updateButton();
+            message.textContent = isSaved
+                ? "Article saved successfully!"
+                : "Article removed from saved articles.";
+
+        } catch (error) {
+            message.textContent = error.message;
+        } finally {
+            button.disabled = false;
+        }
+    });
+}
+
+async function setupLikes(slug) {
+    const button = document.getElementById("likeBtn");
+    const countElement = document.getElementById("likeCount");
+    const message = document.getElementById("likeMessage");
+
+    let isLiked = false;
+    let isLoggedIn = false;
+
+    async function loadLikeStatus() {
+        try {
+            const authResponse = await fetch("/api/auth/me", {
+                credentials: "same-origin"
+            });
+
+            isLoggedIn = authResponse.ok;
+
+            if (!isLoggedIn) {
+                button.innerHTML = "♥ Sign in to Like";
+                message.textContent = "Sign in to like this article.";
+                return;
+            }
+
+            const response = await fetch(
+                `/api/posts/${encodeURIComponent(slug)}/likes`,
+                { credentials: "same-origin" }
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load likes.");
+            }
+
+            const data = await response.json();
+
+            isLiked = data.liked_by_me;
+            countElement.textContent = data.total_likes;
+
+            updateButton();
+
+        } catch (error) {
+            message.textContent = error.message;
+            console.error(error);
+        }
+    }
+
+    function updateButton() {
+        button.classList.toggle("liked", isLiked);
+        button.innerHTML = isLiked
+            ? `♥ Liked <span id="likeCount">${countElement.textContent}</span>`
+            : `♥ Like <span id="likeCount">${countElement.textContent}</span>`;
+    }
+
+    button.addEventListener("click", async function() {
+        if (!isLoggedIn) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        button.disabled = true;
+        message.textContent = isLiked ? "Removing like..." : "Liking article...";
+
+        try {
+            const response = await fetch(
+                `/api/posts/${encodeURIComponent(slug)}/like`,
+                {
+                    method: isLiked ? "DELETE" : "POST",
+                    credentials: "same-origin"
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.detail || "Like action failed.");
+            }
+
+            await loadLikeStatus();
+            message.textContent = isLiked
+                ? "You liked this article!"
+                : "Like removed.";
+
+        } catch (error) {
+            message.textContent = error.message;
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+    await loadLikeStatus();
+}
+
+</script>
+
+</body>
+</html>

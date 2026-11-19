@@ -1,0 +1,2736 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | GAME NEXUS</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+
+    <style>
+        body {
+            background: #09090B;
+            color: #FAFAFA;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            background: #121214;
+            min-height: 100vh;
+            border-right: 1px solid #29292e;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            color: white;
+            font-size: 22px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .nav-link {
+            color: #a1a1aa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #29292e;
+            color: white;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .panel, .stat-card {
+            background: #18181B;
+            border: 1px solid #303036;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .form-control, .form-select {
+            background: #09090B;
+            color: white;
+            border: 1px solid #41414a;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: #09090B;
+            color: white;
+            border-color: #6366F1;
+            box-shadow: 0 0 0 0.2rem #6366F133;
+        }
+
+        .form-control::placeholder {
+            color: #71717a;
+        }
+
+        .form-select option {
+            background: #18181B;
+            color: white;
+        }
+
+        .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #FAFAFA;
+            --bs-table-border-color: #303036;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        .btn-primary {
+            background: #6366F1;
+            border-color: #6366F1;
+        }
+
+        .btn-primary:hover {
+            background: #4F46E5;
+        }
+
+        .muted {
+            color: #a1a1aa;
+        }
+
+        @media (max-width: 767px) {
+            .sidebar {
+                min-height: auto;
+                border-right: 0;
+                border-bottom: 1px solid #29292e;
+            }
+
+            .main-content {
+                padding: 18px;
+            }
+        }
+
+        .navbar-logo {
+    width: 65px;
+    height: 45px;
+    object-fit: contain;
+    display: block;
+}
+
+.brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 576px) {
+    .navbar-logo {
+        width: 55px;
+        height: 38px;
+    }
+}
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <aside class="col-md-3 col-lg-2 sidebar">
+            <a href="index.html" class="brand">GAME NEXUS</a>
+            <p class="muted small mt-2">ADMIN PANEL</p>
+
+            <nav class="nav flex-column mt-4">
+                <a href="#dashboard" class="nav-link active">
+                    <i class="bi bi-grid me-2"></i> Dashboard
+                </a>
+
+                <a href="#posts" class="nav-link">
+                    <i class="bi bi-file-text me-2"></i> Manage Posts
+                </a>
+
+                <a href="#comments" class="nav-link">
+    <i class="bi bi-chat-dots me-2"></i> Manage Comments
+</a>
+                <a href="#users" class="nav-link">
+    <i class="bi bi-people me-2"></i> Manage Users
+</a>
+
+<a href="#newsletter" class="nav-link">
+    <i class="bi bi-envelope me-2"></i> Newsletter Subscribers
+</a>
+
+<a href="#newsletterCampaign" class="nav-link">
+    <i class="bi bi-send me-2"></i> Send Campaign
+</a>
+
+<a href="#contactMessages" class="nav-link">
+    <i class="bi bi-inbox me-2"></i> Contact Messages
+</a>
+                <a href="#postForm" class="nav-link">
+                    <i class="bi bi-plus-circle me-2"></i> Add New Post
+                </a>
+
+                <a href="index.html" class="nav-link">
+                    <i class="bi bi-house me-2"></i> Visit Website
+                </a>
+            </nav>
+
+            <button id="logoutBtn" class="btn btn-outline-danger w-100 mt-5">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 main-content">
+
+            <section id="dashboard">
+                <h2 class="fw-bold">Admin Dashboard</h2>
+                <p class="muted">Manage your GAME NEXUS gaming blog.</p>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <p class="muted mb-1">Total Posts</p>
+                            <div class="stat-number" id="totalPosts">0</div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <p class="muted mb-1">Published Posts</p>
+                            <div class="stat-number" id="publishedPosts">0</div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <p class="muted mb-1">Draft Posts</p>
+                            <div class="stat-number" id="draftPosts">0</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+    <div class="stat-card">
+        <p class="muted mb-1">Registered Users</p>
+        <div class="stat-number" id="totalUsers">0</div>
+    </div>
+</div>
+<!-- Comment Analytics -->
+<div class="col-sm-6 col-lg-4">
+    <div class="stat-card">
+        <p class="muted mb-1">Total Comments</p>
+        <div class="stat-number" id="analyticsTotalComments">0</div>
+    </div>
+</div>
+
+<div class="col-sm-6 col-lg-4">
+    <div class="stat-card">
+        <p class="muted mb-1">Approved Comments</p>
+        <div class="stat-number" id="analyticsApprovedComments">0</div>
+    </div>
+</div>
+
+<div class="col-sm-6 col-lg-4">
+    <div class="stat-card">
+        <p class="muted mb-1">Pending Comments</p>
+        <div class="stat-number" id="analyticsPendingComments">0</div>
+    </div>
+</div>
+
+<!-- Other Analytics -->
+<div class="col-sm-6 col-lg-4">
+    <div class="stat-card">
+        <p class="muted mb-1">Newsletter Subscribers</p>
+        <div class="stat-number" id="analyticsSubscribers">0</div>
+    </div>
+</div>
+
+<div class="col-sm-6 col-lg-4">
+    <div class="stat-card">
+        <p class="muted mb-1">Contact Messages</p>
+        <div class="stat-number" id="analyticsMessages">0</div>
+    </div>
+</div>
+
+<div class="col-sm-6 col-lg-4">
+    <div class="stat-card">
+        <p class="muted mb-1">Total Article Views</p>
+        <div class="stat-number" id="analyticsTotalViews">0</div>
+    </div>
+</div>
+                </div>
+            </section>
+            <!-- User Registration Analytics -->
+<section class="panel mt-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4 class="mb-1">User Registration Analytics</h4>
+            <p class="muted mb-0">Monthly registrations over the last six months</p>
+        </div>
+
+        <button id="refreshAnalyticsBtn"
+                class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Refresh Analytics
+        </button>
+    </div>
+
+    <div id="analyticsMessage" class="mt-3"></div>
+
+    <div class="mt-4" style="height: 300px;">
+        <canvas id="registrationChart"></canvas>
+    </div>
+</section>
+
+<!-- Article View Analytics -->
+<section class="panel mt-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4 class="mb-1">Most Viewed Articles</h4>
+            <p class="muted mb-0">Top 5 articles ranked by total views</p>
+        </div>
+    </div>
+
+    <div class="table-responsive mt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Article Title</th>
+                    <th>Slug</th>
+                    <th>Total Views</th>
+                </tr>
+            </thead>
+
+            <tbody id="popularPostsTable">
+                <tr>
+                    <td colspan="4" class="text-center muted">
+                        Loading article statistics...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+            <!-- Post Form -->
+            <section id="postForm" class="panel mt-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h4 id="formHeading">Create New Post</h4>
+                    <button type="button" id="cancelEditBtn"
+                        class="btn btn-outline-light btn-sm d-none">
+                        Cancel Editing
+                    </button>
+                </div>
+
+                <form id="postFormElement" class="mt-3">
+
+                    <div class="mb-3">
+                        <label class="form-label">Post Title</label>
+                        <input type="text" id="title" class="form-control"
+                            placeholder="Enter article title" minlength="3"
+                            maxlength="250" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Post Slug</label>
+                        <input type="text" id="slug" class="form-control"
+                            placeholder="example-gaming-article"
+                            pattern="[a-z0-9]+(-[a-z0-9]+)*"
+                            minlength="3" maxlength="220" required>
+                        <small class="muted">Use lowercase letters, numbers and hyphens.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Excerpt</label>
+                        <textarea id="excerpt" class="form-control" rows="2"
+                            maxlength="3000" placeholder="Short article description"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Article Content</label>
+                        <textarea id="body" class="form-control" rows="8"
+                            placeholder="Write your complete article here..." required></textarea>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Category</label>
+                            <input type="text" id="category" class="form-control"
+                                value="Gaming" maxlength="80" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Image Path</label>
+                            <input type="text" id="imagePath" class="form-control"
+                                placeholder="images/article.jpg">
+                        </div>
+                    </div>
+
+                    <div class="form-check mt-3">
+                        <input type="checkbox" id="isPublished"
+                            class="form-check-input" checked>
+                        <label class="form-check-label" for="isPublished">
+                            Publish this article
+                        </label>
+                    </div>
+
+                    <div id="formMessage" class="mt-3"></div>
+
+                    <button type="submit" id="savePostBtn"
+                        class="btn btn-primary mt-3">
+                        <i class="bi bi-plus-circle me-2"></i> Create Post
+                    </button>
+
+                </form>
+            </section>
+
+            <!-- Posts Table -->
+            <section id="posts" class="panel mt-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h4>Manage Blog Posts</h4>
+                    <button id="refreshBtn" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+                    </button>
+                </div>
+
+                <div id="tableMessage" class="mt-3"></div>
+
+                <!-- Search Posts -->
+<div class="row mt-3">
+    <div class="col-md-6">
+        <input
+            type="search"
+            id="postSearch"
+            class="form-control"
+            placeholder="Search posts by title or category..."
+        >
+    </div>
+</div>
+
+                <div class="table-responsive mt-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postsTable">
+                            <tr>
+                                <td colspan="4" class="text-center muted">
+                                    Loading posts...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+    <small id="postsPageInfo" class="muted">Page 1</small>
+
+    <div class="btn-group">
+        <button id="postsPrevPage" class="btn btn-outline-light btn-sm">
+            Previous
+        </button>
+        <button id="postsNextPage" class="btn btn-outline-light btn-sm">
+            Next
+        </button>
+    </div>
+</div>
+                </div>
+            </section>
+
+            <!-- Comments Management -->
+<section id="comments" class="panel mt-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h4>Manage Comments</h4>
+
+        <button id="refreshCommentsBtn"
+                class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Refresh Comments
+        </button>
+    </div>
+
+    <div class="mt-3">
+        <span class="muted">Pending approval: </span>
+        <strong id="pendingCommentsCount">0</strong>
+    </div>
+
+    <div id="commentsMessage" class="mt-3"></div>
+
+<!-- Comment Status Filter -->
+<div class="row mt-3">
+    <div class="col-md-4">
+        <select id="commentStatusFilter" class="form-select">
+            <option value="all">All Comments</option>
+            <option value="pending">Pending Comments</option>
+            <option value="approved">Approved Comments</option>
+        </select>
+    </div>
+</div>
+
+<!-- Comment Search -->
+<div class="row mt-3">
+    <div class="col-md-6">
+        <input
+            type="search"
+            id="commentSearch"
+            class="form-control"
+            placeholder="Search by username, article, or comment..."
+        >
+    </div>
+</div>
+
+    <div class="table-responsive mt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Article</th>
+                    <th>Comment</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="commentsTable">
+                <tr>
+                    <td colspan="5" class="text-center muted">
+                        Loading comments...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="commentsPagination"
+     class="d-flex justify-content-center align-items-center flex-wrap gap-2 mt-3">
+</div>
+
+</section>
+
+
+<!-- Users Management -->
+<section id="users" class="panel mt-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h4><i class="bi bi-people me-2"></i>Manage Users</h4>
+
+        <button id="refreshUsersBtn" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-clockwise me-1"></i> Refresh Users
+        </button>
+    </div>
+
+    <p class="muted mt-2">
+        View and search all registered GAME NEXUS users.
+    </p>
+
+    <div class="row g-2 mt-2">
+        <div class="col-md-9">
+            <input
+                type="search"
+                id="userSearch"
+                class="form-control"
+                placeholder="Search by gamer tag or email..."
+            >
+        </div>
+
+        <div class="col-md-3">
+            <button id="searchUsersBtn" class="btn btn-primary w-100">
+                <i class="bi bi-search me-1"></i> Search
+            </button>
+        </div>
+    </div>
+
+    <div id="usersMessage" class="mt-3"></div>
+
+    <div class="table-responsive mt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Gamer Tag</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Registration Date</th>
+                </tr>
+            </thead>
+
+            <tbody id="usersTable">
+                <tr>
+                    <td colspan="5" class="text-center muted">
+                        Loading users...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+    <small id="usersPageInfo" class="muted">Page 1</small>
+
+    <div class="btn-group">
+        <button id="usersPrevPage" class="btn btn-outline-light btn-sm">
+            Previous
+        </button>
+
+        <button id="usersNextPage" class="btn btn-outline-light btn-sm">
+            Next
+        </button>
+    </div>
+</div>
+
+</section>
+
+
+<!-- Newsletter Subscribers -->
+<section id="newsletter" class="panel mt-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4><i class="bi bi-envelope me-2"></i>Newsletter Subscribers</h4>
+            <p class="muted mb-0">View all registered newsletter subscribers.</p>
+        </div>
+
+        <button id="refreshNewsletterBtn" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+        </button>
+
+        <button id="exportNewsletterBtn" class="btn btn-success btn-sm">
+    <i class="bi bi-download me-1"></i> Export CSV
+</button>
+    </div>
+
+    <button id="exportNewsletterBtn" class="btn btn-success btn-sm">
+    <i class="bi bi-download me-1"></i> Export CSV
+</button>
+
+    <div id="newsletterMessage" class="mt-3"></div>
+
+    <div class="row mt-3">
+    <div class="col-md-6">
+        <input
+            type="search"
+            id="newsletterSearch"
+            class="form-control"
+            placeholder="Search subscribers by email..."
+        >
+    </div>
+</div>
+
+    <div class="table-responsive mt-3">
+        <table class="table">
+            <thead>
+    <tr>
+        <th>#</th>
+        <th>Email Address</th>
+        <th>Subscription Date</th>
+        <th>Action</th>
+    </tr>
+</thead>
+
+            <tbody id="newsletterTable">
+                <tr>
+                    <td colspan="4" class="text-center muted">
+                        Loading subscribers...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!-- Newsletter Campaign -->
+<section id="newsletterCampaign" class="panel mt-4">
+
+    <div class="mb-4">
+        <h4>
+            <i class="bi bi-send me-2"></i>
+            Newsletter Campaign
+        </h4>
+
+        <p class="muted mb-0">
+            Create and send gaming news, announcements and updates
+            to your newsletter subscribers.
+        </p>
+    </div>
+
+    <!-- Subscriber Count -->
+    <div class="stat-card mb-4">
+        <p class="muted mb-1">Total Campaign Recipients</p>
+        <div class="stat-number" id="campaignSubscriberCount">0</div>
+        <small class="muted">Registered newsletter subscribers</small>
+    </div>
+
+    <form id="campaignForm">
+
+        <div class="mb-3">
+            <label for="campaignSubject" class="form-label">
+                Email Subject
+            </label>
+
+            <input
+                type="text"
+                id="campaignSubject"
+                class="form-control"
+                placeholder="Example: Latest Gaming Updates - GAME NEXUS"
+                minlength="3"
+                maxlength="150"
+                required
+            >
+        </div>
+
+        <div class="mb-3">
+            <label for="campaignBody" class="form-label">
+                Campaign Message
+            </label>
+
+            <textarea
+                id="campaignBody"
+                class="form-control"
+                rows="9"
+                minlength="5"
+                maxlength="10000"
+                placeholder="Hello Gamer!
+
+Write your latest gaming news, announcements or updates here..."
+                required
+            ></textarea>
+
+            <small class="muted">
+                Maximum 10,000 characters.
+            </small>
+        </div>
+
+        <div id="campaignMessage" class="mt-3"></div>
+
+        <button
+            type="submit"
+            id="sendCampaignBtn"
+            class="btn btn-primary mt-2"
+        >
+            <i class="bi bi-send me-2"></i>
+            Send Newsletter Campaign
+        </button>
+
+        <button
+    type="button"
+    id="sendTestCampaignBtn"
+    class="btn btn-outline-light mt-2 ms-2"
+>
+    <i class="bi bi-envelope-check me-2"></i>
+    Send Test Email
+</button>
+
+    </form>
+
+    <!-- Campaign Results -->
+    <div id="campaignResults" class="mt-4"></div>
+
+</section>
+
+<!-- Newsletter Campaign History -->
+<section id="campaignHistory" class="panel mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4>
+                <i class="bi bi-clock-history me-2"></i>
+                Campaign History
+            </h4>
+            <p class="muted mb-0">
+                Track your previous newsletter campaigns.
+            </p>
+        </div>
+
+        <button
+            class="btn btn-outline-light btn-sm"
+            onclick="loadCampaignHistory()"
+        >
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Refresh
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Recipients</th>
+                    <th>Sent</th>
+                    <th>Failed</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="campaignHistoryTable">
+                <tr>
+                    <td colspan="6" class="text-center muted">
+                        Loading campaign history...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!-- Campaign Details Modal -->
+<div class="modal fade" id="campaignDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">
+                    <i class="bi bi-envelope-paper me-2"></i>
+                    Campaign Details
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+            </div>
+
+            <div class="modal-body">
+
+                <h6 class="muted">Email Subject</h6>
+                <p id="detailSubject"></p>
+
+                <hr>
+
+                <h6 class="muted">Campaign Message</h6>
+                <div
+                    id="detailBody"
+                    class="p-3 rounded"
+                    style="background:#18181B; white-space:pre-wrap;"
+                ></div>
+
+                <hr>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <small class="muted">Total Recipients</small>
+                        <h4 id="detailTotal">0</h4>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="muted">Successfully Sent</small>
+                        <h4 id="detailSent">0</h4>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="muted">Failed</small>
+                        <h4 id="detailFailed">0</h4>
+                    </div>
+                </div>
+
+                <hr>
+
+                <p>
+                    <strong>Status:</strong>
+                    <span id="detailStatus"></span>
+                </p>
+
+                <p>
+                    <strong>Created:</strong>
+                    <span id="detailCreated"></span>
+                </p>
+
+                <p>
+                    <strong>Completed:</strong>
+                    <span id="detailCompleted"></span>
+                </p>
+
+            </div>
+
+            <div class="modal-footer border-secondary">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Contact Messages -->
+<section id="contactMessages" class="panel mt-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4><i class="bi bi-inbox me-2"></i>Contact Messages</h4>
+            <p class="muted mb-0">View messages received from website visitors.</p>
+        </div>
+
+        <button id="refreshContactBtn" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+        </button>
+    </div>
+
+    <div id="contactMessageStatus" class="mt-3"></div>
+
+    <div class="row mt-3">
+    <div class="col-md-6">
+        <input
+            type="search"
+            id="contactSearch"
+            class="form-control"
+            placeholder="Search by name or email..."
+        >
+    </div>
+</div>
+
+    <div class="table-responsive mt-3">
+        <table class="table">
+            <thead>
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Topic</th>
+        <th>Message</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+</thead>
+
+            <tbody id="contactMessagesTable">
+                <tr>
+                    <td colspan="7" class="text-center muted">
+                        Loading messages...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+        </main>
+    </div>
+</div>
+
+<script>
+let allPosts = [];
+let registrationChart = null;
+let postsCurrentPage = 1;
+const postsPerPage = 10;
+let allComments = [];
+let currentCommentPage = 1;
+const COMMENTS_PAGE_SIZE = 10;
+let allContactMessages = [];
+let allNewsletterSubscribers = [];
+let editingPostId = null;
+let allUsers = [];
+let usersCurrentPage = 1;
+const usersPerPage = 10;
+
+const form = document.getElementById('postFormElement');
+
+function showMessage(elementId, message, type) {
+    const element = document.getElementById(elementId);
+    element.textContent = '';
+
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+
+    element.appendChild(alert);
+}
+
+async function checkAdmin() {
+    try {
+        const response = await fetch('/api/auth/me', {
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            window.location.href = '/login.html';
+            return false;
+        }
+
+        const user = await response.json();
+
+        if (!user.is_admin) {
+            alert('You do not have administrator access.');
+            window.location.href = '/index.html';
+            return false;
+        }
+
+        return true;
+
+    } catch (error) {
+        alert('Unable to verify administrator access.');
+        return false;
+    }
+}
+
+
+// Load posts from the server with pagination and search
+async function loadPosts() {
+    const searchTerm = document.getElementById('postSearch').value.trim();
+
+    const url = `/api/admin/posts/paginated?page=${postsCurrentPage}&per_page=${postsPerPage}&search=${encodeURIComponent(searchTerm)}`;
+
+    const response = await fetch(url, {
+        credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+        throw new Error('Unable to load posts.');
+    }
+
+    const data = await response.json();
+
+    // Handle page changes when the last post on a page is deleted
+    const totalPages = Math.max(1, data.total_pages);
+
+    if (postsCurrentPage > totalPages) {
+        postsCurrentPage = totalPages;
+        return loadPosts();
+    }
+
+    allPosts = data.items;
+
+    // Update dashboard statistics
+    document.getElementById('totalPosts').textContent =
+        data.total_posts;
+
+    document.getElementById('publishedPosts').textContent =
+        data.published_posts;
+
+    document.getElementById('draftPosts').textContent =
+        data.draft_posts;
+
+    renderPosts(data);
+}
+
+
+// Render posts received from the server
+function renderPosts(data) {
+    const table = document.getElementById('postsTable');
+
+    if (!table) return;
+
+    const totalPages = Math.max(1, data.total_pages);
+
+    table.textContent = '';
+
+    if (allPosts.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 4;
+        cell.className = 'text-center muted';
+
+        cell.textContent = document.getElementById('postSearch').value.trim()
+            ? 'No matching posts found.'
+            : 'No blog posts found.';
+
+        row.appendChild(cell);
+        table.appendChild(row);
+    }
+
+    allPosts.forEach(post => {
+        const row = document.createElement('tr');
+
+        const titleCell = document.createElement('td');
+        titleCell.textContent = post.title;
+
+        const categoryCell = document.createElement('td');
+        categoryCell.textContent = post.category || 'Uncategorized';
+
+        const statusCell = document.createElement('td');
+        const statusBadge = document.createElement('span');
+
+        statusBadge.className = post.is_published
+            ? 'badge bg-success'
+            : 'badge bg-secondary';
+
+        statusBadge.textContent = post.is_published
+            ? 'Published'
+            : 'Draft';
+
+        statusCell.appendChild(statusBadge);
+
+        const actionCell = document.createElement('td');
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn btn-sm btn-outline-info me-1 mb-1';
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', () => editPost(post.id));
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'btn btn-sm btn-outline-warning me-1 mb-1';
+        toggleBtn.textContent = post.is_published ? 'Unpublish' : 'Publish';
+        toggleBtn.addEventListener('click', () => togglePost(post.id));
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-sm btn-outline-danger mb-1';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', () => deletePost(post.id));
+
+        actionCell.append(editBtn, toggleBtn, deleteBtn);
+
+        row.append(titleCell, categoryCell, statusCell, actionCell);
+        table.appendChild(row);
+    });
+
+    // Update pagination information
+    const pageInfo = document.getElementById('postsPageInfo');
+    const prevButton = document.getElementById('postsPrevPage');
+    const nextButton = document.getElementById('postsNextPage');
+
+    const showingFrom = data.total === 0
+        ? 0
+        : (postsCurrentPage - 1) * postsPerPage + 1;
+
+    const showingTo = Math.min(
+        postsCurrentPage * postsPerPage,
+        data.total
+    );
+
+    if (pageInfo) {
+        pageInfo.textContent =
+            `Showing ${showingFrom}-${showingTo} of ${data.total} posts | Page ${postsCurrentPage} of ${totalPages}`;
+    }
+
+    if (prevButton) {
+        prevButton.disabled = postsCurrentPage <= 1;
+    }
+
+    if (nextButton) {
+        nextButton.disabled =
+            postsCurrentPage >= totalPages;
+    }
+}
+
+
+// Live server-side post search
+document.getElementById('postSearch').addEventListener('input', function() {
+    postsCurrentPage = 1;
+    loadPosts();
+});
+
+
+// Previous page
+document.getElementById('postsPrevPage').addEventListener('click', function() {
+    if (postsCurrentPage > 1) {
+        postsCurrentPage--;
+        loadPosts();
+    }
+});
+
+
+// Next page
+document.getElementById('postsNextPage').addEventListener('click', function() {
+    postsCurrentPage++;
+    loadPosts();
+});
+
+function editPost(id) {
+    const post = allPosts.find(item => item.id === id);
+    if (!post) return;
+
+    editingPostId = id;
+
+    document.getElementById('title').value = post.title;
+    document.getElementById('slug').value = post.slug;
+    document.getElementById('excerpt').value = post.excerpt || '';
+    document.getElementById('body').value = post.body || '';
+    document.getElementById('category').value = post.category || 'Gaming';
+    document.getElementById('imagePath').value = post.image_path || '';
+    document.getElementById('isPublished').checked = post.is_published;
+
+    document.getElementById('formHeading').textContent = 'Edit Blog Post';
+    document.getElementById('savePostBtn').textContent = 'Save Changes';
+    document.getElementById('cancelEditBtn').classList.remove('d-none');
+
+    document.getElementById('postForm').scrollIntoView({
+        behavior: 'smooth'
+    });
+}
+
+function resetForm() {
+    editingPostId = null;
+    form.reset();
+
+    document.getElementById('category').value = 'Gaming';
+    document.getElementById('isPublished').checked = true;
+    document.getElementById('formHeading').textContent = 'Create New Post';
+    document.getElementById('savePostBtn').textContent = 'Create Post';
+    document.getElementById('cancelEditBtn').classList.add('d-none');
+    document.getElementById('formMessage').textContent = '';
+}
+
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const data = {
+        title: document.getElementById('title').value.trim(),
+        slug: document.getElementById('slug').value.trim(),
+        excerpt: document.getElementById('excerpt').value.trim(),
+        body: document.getElementById('body').value.trim(),
+        category: document.getElementById('category').value.trim(),
+        image_path: document.getElementById('imagePath').value.trim() || null,
+        is_premium: false,
+        is_published: document.getElementById('isPublished').checked
+    };
+
+    const button = document.getElementById('savePostBtn');
+    button.disabled = true;
+
+    try {
+        const url = editingPostId
+            ? `/api/admin/posts/${editingPostId}`
+            : '/api/admin/posts';
+
+        const response = await fetch(url, {
+            method: editingPostId ? 'PUT' : 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                typeof result.detail === 'string'
+                    ? result.detail
+                    : JSON.stringify(result.detail || result)
+            );
+        }
+
+        showMessage(
+            'formMessage',
+            result.message || 'Post saved successfully.',
+            'success'
+        );
+
+        resetForm();
+        await loadPosts();
+
+    } catch (error) {
+        showMessage('formMessage', error.message, 'danger');
+    } finally {
+        button.disabled = false;
+    }
+});
+
+async function togglePost(id) {
+    const post = allPosts.find(item => item.id === id);
+    if (!post) return;
+
+    try {
+        const response = await fetch(`/api/admin/posts/${id}`, {
+            method: 'PUT',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                slug: post.slug,
+                title: post.title,
+                excerpt: post.excerpt || '',
+                body: post.body || '',
+                category: post.category,
+                image_path: post.image_path,
+                is_premium: false,
+                is_published: !post.is_published
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || 'Unable to change post status.');
+        }
+
+        await loadPosts();
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function deletePost(id) {
+    if (!confirm('Are you sure you want to delete this post?')) return;
+
+    try {
+        const response = await fetch(`/api/admin/posts/${id}`, {
+            method: 'DELETE',
+            credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || 'Unable to delete post.');
+        }
+
+        showMessage('tableMessage', result.message, 'success');
+        await loadPosts();
+
+    } catch (error) {
+        showMessage('tableMessage', error.message, 'danger');
+    }
+}
+
+document.getElementById('refreshBtn').addEventListener('click', async function() {
+    try {
+        await loadPosts();
+        showMessage('tableMessage', 'Posts refreshed.', 'success');
+    } catch (error) {
+        showMessage('tableMessage', error.message, 'danger');
+    }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async function() {
+    const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'same-origin'
+    });
+
+    if (response.ok) {
+        window.location.href = '/login.html';
+    } else {
+        alert('Logout failed.');
+    }
+});
+
+
+// Load comments from the server with pagination and filters
+async function loadComments() {
+    const filter = document.getElementById('commentStatusFilter');
+    const searchInput = document.getElementById('commentSearch');
+
+    const status = filter.value;
+    const search = searchInput.value.trim();
+
+    const params = new URLSearchParams({
+        page: currentCommentPage,
+        per_page: COMMENTS_PAGE_SIZE,
+        search: search,
+        status: status
+    });
+
+    const response = await fetch(
+        `/api/admin/comments/paginated?${params.toString()}`,
+        {
+            credentials: 'same-origin'
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error('Unable to load comments.');
+    }
+
+    const data = await response.json();
+
+    // Handle deletion of the last comment on a page
+    const totalPages = Math.max(1, data.total_pages);
+
+    if (currentCommentPage > totalPages) {
+        currentCommentPage = totalPages;
+        return loadComments();
+    }
+
+    allComments = data.items;
+
+    // Update pending approval count
+    document.getElementById('pendingCommentsCount').textContent =
+        data.pending_count;
+
+    renderComments(data);
+}
+
+
+// Display comments received from the server
+function renderComments(data) {
+    const table = document.getElementById('commentsTable');
+    const pagination = document.getElementById('commentsPagination');
+
+    if (!table) return;
+
+    const totalPages = Math.max(1, data.total_pages);
+
+    table.textContent = '';
+
+    if (allComments.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 5;
+        cell.className = 'text-center muted';
+
+        const searchTerm = document.getElementById('commentSearch').value.trim();
+        const selectedStatus = document.getElementById('commentStatusFilter').value;
+
+        cell.textContent = searchTerm || selectedStatus !== 'all'
+            ? 'No matching comments found.'
+            : 'No comments found.';
+
+        row.appendChild(cell);
+        table.appendChild(row);
+    }
+
+    allComments.forEach(comment => {
+        const row = document.createElement('tr');
+
+        function addCell(value) {
+            const cell = document.createElement('td');
+            cell.textContent = value || '';
+            row.appendChild(cell);
+        }
+
+        addCell(comment.display_name);
+        addCell(comment.post_slug);
+        addCell(comment.body);
+
+        const statusCell = document.createElement('td');
+        const badge = document.createElement('span');
+
+        badge.className = comment.is_approved
+            ? 'badge bg-success'
+            : 'badge bg-warning text-dark';
+
+        badge.textContent = comment.is_approved
+            ? 'Approved'
+            : 'Pending';
+
+        statusCell.appendChild(badge);
+        row.appendChild(statusCell);
+
+        const actionCell = document.createElement('td');
+
+        if (!comment.is_approved) {
+            const approveBtn = document.createElement('button');
+
+            approveBtn.className = 'btn btn-sm btn-success me-1 mb-1';
+            approveBtn.textContent = 'Approve';
+
+            approveBtn.addEventListener('click', () => {
+                approveComment(comment.id);
+            });
+
+            actionCell.appendChild(approveBtn);
+        }
+
+        const deleteBtn = document.createElement('button');
+
+        deleteBtn.className = 'btn btn-sm btn-outline-danger mb-1';
+        deleteBtn.textContent = 'Delete';
+
+        deleteBtn.addEventListener('click', () => {
+            deleteComment(comment.id);
+        });
+
+        actionCell.appendChild(deleteBtn);
+        row.appendChild(actionCell);
+
+        table.appendChild(row);
+    });
+
+    // Update pagination controls
+    if (pagination) {
+        pagination.textContent = '';
+
+        if (data.total > 0) {
+            const previousButton = document.createElement('button');
+
+            previousButton.className = 'btn btn-outline-light btn-sm';
+            previousButton.textContent = 'Previous';
+            previousButton.disabled = currentCommentPage <= 1;
+
+            previousButton.addEventListener('click', () => {
+                if (currentCommentPage > 1) {
+                    currentCommentPage--;
+                    loadComments();
+                }
+            });
+
+            pagination.appendChild(previousButton);
+
+            const pageInfo = document.createElement('span');
+
+            pageInfo.className = 'text-white mx-2';
+            pageInfo.textContent =
+                `Page ${currentCommentPage} of ${totalPages}`;
+
+            pagination.appendChild(pageInfo);
+
+            const nextButton = document.createElement('button');
+
+            nextButton.className = 'btn btn-outline-light btn-sm';
+            nextButton.textContent = 'Next';
+            nextButton.disabled = currentCommentPage >= totalPages;
+
+            nextButton.addEventListener('click', () => {
+                if (currentCommentPage < totalPages) {
+                    currentCommentPage++;
+                    loadComments();
+                }
+            });
+
+            pagination.appendChild(nextButton);
+        }
+    }
+}
+
+
+// Change status filter
+document.getElementById('commentStatusFilter')
+    .addEventListener('change', function() {
+        currentCommentPage = 1;
+        loadComments();
+    });
+
+
+// Search comments with a short delay
+let commentSearchTimeout;
+
+document.getElementById('commentSearch')
+    .addEventListener('input', function() {
+        clearTimeout(commentSearchTimeout);
+
+        currentCommentPage = 1;
+
+        commentSearchTimeout = setTimeout(() => {
+            loadComments();
+        }, 300);
+    });
+
+// Approve a comment
+async function approveComment(id) {
+    try {
+        const response = await fetch(
+            `/api/admin/comments/${id}/approve`,
+            {
+                method: 'PUT',
+                credentials: 'same-origin'
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || 'Unable to approve comment.');
+        }
+
+        showMessage(
+            'commentsMessage',
+            'Comment approved successfully!',
+            'success'
+        );
+
+        await loadComments();
+
+    } catch (error) {
+        showMessage('commentsMessage', error.message, 'danger');
+    }
+}
+
+
+// Delete a comment
+async function deleteComment(id) {
+    if (!confirm('Are you sure you want to delete this comment?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/admin/comments/${id}`,
+            {
+                method: 'DELETE',
+                credentials: 'same-origin'
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || 'Unable to delete comment.');
+        }
+
+        showMessage(
+            'commentsMessage',
+            'Comment deleted successfully!',
+            'success'
+        );
+
+        await loadComments();
+
+    } catch (error) {
+        showMessage('commentsMessage', error.message, 'danger');
+    }
+}
+
+
+// Refresh comments button
+document.getElementById('refreshCommentsBtn')
+    .addEventListener('click', async function() {
+        try {
+            await loadComments();
+
+            showMessage(
+                'commentsMessage',
+                'Comments refreshed successfully.',
+                'success'
+            );
+
+        } catch (error) {
+            showMessage('commentsMessage', error.message, 'danger');
+        }
+    });
+
+// Load registered users
+async function loadUsers(search = '') {
+    const table = document.getElementById('usersTable');
+
+    table.innerHTML = `
+        <tr>
+            <td colspan="5" class="text-center muted">
+                Loading users...
+            </td>
+        </tr>
+    `;
+
+    try {
+        const url = `/api/admin/users?search=${encodeURIComponent(search)}`;
+
+        const response = await fetch(url, {
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            throw new Error('Unable to load registered users.');
+        }
+
+        allUsers = await response.json();
+
+        usersCurrentPage = 1;
+
+        document.getElementById('totalUsers').textContent = allUsers.length;
+
+        renderUsers();
+
+    } catch (error) {
+        table.textContent = '';
+
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 5;
+        cell.className = 'text-center text-danger';
+        cell.textContent = error.message;
+
+        row.appendChild(cell);
+        table.appendChild(row);
+
+        throw error;
+    }
+}
+
+
+// Display users with pagination
+function renderUsers() {
+    const table = document.getElementById('usersTable');
+
+    if (!table) return;
+
+    const totalPages = Math.max(
+        1,
+        Math.ceil(allUsers.length / usersPerPage)
+    );
+
+    usersCurrentPage = Math.min(usersCurrentPage, totalPages);
+
+    const startIndex = (usersCurrentPage - 1) * usersPerPage;
+
+    const paginatedUsers = allUsers.slice(
+        startIndex,
+        startIndex + usersPerPage
+    );
+
+    table.textContent = '';
+
+    if (allUsers.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 5;
+        cell.className = 'text-center muted';
+        cell.textContent = 'No users found.';
+
+        row.appendChild(cell);
+        table.appendChild(row);
+    }
+
+    paginatedUsers.forEach(user => {
+        const row = document.createElement('tr');
+
+        function addCell(value) {
+            const cell = document.createElement('td');
+            cell.textContent = value ?? '—';
+            row.appendChild(cell);
+        }
+
+        addCell(user.id);
+        addCell(user.gamer_tag);
+        addCell(user.email);
+
+        const roleCell = document.createElement('td');
+        const badge = document.createElement('span');
+
+        badge.className = user.is_admin
+            ? 'badge bg-primary'
+            : 'badge bg-secondary';
+
+        badge.textContent = user.is_admin
+            ? 'Administrator'
+            : 'Normal User';
+
+        roleCell.appendChild(badge);
+        row.appendChild(roleCell);
+
+        const dateCell = document.createElement('td');
+
+        dateCell.textContent = user.created_at
+            ? new Date(user.created_at).toLocaleDateString()
+            : '—';
+
+        row.appendChild(dateCell);
+
+        table.appendChild(row);
+    });
+
+    const pageInfo = document.getElementById('usersPageInfo');
+    const prevButton = document.getElementById('usersPrevPage');
+    const nextButton = document.getElementById('usersNextPage');
+
+    if (pageInfo) {
+        const showingFrom = allUsers.length === 0 ? 0 : startIndex + 1;
+        const showingTo = Math.min(
+            startIndex + usersPerPage,
+            allUsers.length
+        );
+
+        pageInfo.textContent =
+            `Showing ${showingFrom}-${showingTo} of ${allUsers.length} users | Page ${usersCurrentPage} of ${totalPages}`;
+    }
+
+    if (prevButton) {
+        prevButton.disabled = usersCurrentPage === 1;
+    }
+
+    if (nextButton) {
+        nextButton.disabled = usersCurrentPage === totalPages;
+    }
+}
+
+
+// Previous users page
+document.getElementById('usersPrevPage').addEventListener('click', function() {
+    if (usersCurrentPage > 1) {
+        usersCurrentPage--;
+        renderUsers();
+    }
+});
+
+
+// Next users page
+document.getElementById('usersNextPage').addEventListener('click', function() {
+    if (usersCurrentPage < Math.ceil(allUsers.length / usersPerPage)) {
+        usersCurrentPage++;
+        renderUsers();
+    }
+});
+
+// Search users button
+document.getElementById('searchUsersBtn')
+    .addEventListener('click', async function() {
+        const searchTerm = document.getElementById('userSearch').value.trim();
+
+        try {
+            await loadUsers(searchTerm);
+        } catch (error) {
+            showMessage('usersMessage', error.message, 'danger');
+        }
+    });
+
+
+// Search users when pressing Enter
+document.getElementById('userSearch')
+    .addEventListener('keydown', async function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+
+            const searchTerm = this.value.trim();
+
+            try {
+                await loadUsers(searchTerm);
+            } catch (error) {
+                showMessage('usersMessage', error.message, 'danger');
+            }
+        }
+    });
+
+
+// Load dashboard analytics
+async function loadAnalytics() {
+    const response = await fetch('/api/admin/analytics', {
+        credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+        throw new Error('Unable to load dashboard analytics.');
+    }
+
+    const data = await response.json();
+
+    // Update analytics cards
+    document.getElementById('totalUsers').textContent =
+        data.total_users ?? 0;
+
+    document.getElementById('totalPosts').textContent =
+        data.total_posts ?? 0;
+
+    document.getElementById('publishedPosts').textContent =
+        data.published_posts ?? 0;
+
+    document.getElementById('draftPosts').textContent =
+        data.draft_posts ?? 0;
+
+    document.getElementById('analyticsTotalComments').textContent =
+        data.total_comments ?? 0;
+
+    document.getElementById('analyticsApprovedComments').textContent =
+        data.approved_comments ?? 0;
+
+    document.getElementById('analyticsPendingComments').textContent =
+        data.pending_comments ?? 0;
+
+    document.getElementById('analyticsSubscribers').textContent =
+        data.total_subscribers ?? 0;
+
+    document.getElementById('analyticsMessages').textContent =
+        data.total_messages ?? 0;
+    // Total article views
+document.getElementById('analyticsTotalViews').textContent =
+    data.total_article_views ?? 0;
+
+
+// Most viewed articles
+const popularTable = document.getElementById('popularPostsTable');
+
+popularTable.textContent = '';
+
+const popularPosts = data.popular_posts || [];
+
+if (popularPosts.length === 0) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+
+    cell.colSpan = 4;
+    cell.className = 'text-center muted';
+    cell.textContent = 'No article views available yet.';
+
+    row.appendChild(cell);
+    popularTable.appendChild(row);
+
+} else {
+    popularPosts.forEach((post, index) => {
+        const row = document.createElement('tr');
+
+        function addCell(value) {
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            row.appendChild(cell);
+        }
+
+        addCell(index + 1);
+        addCell(post.title);
+        addCell(post.slug);
+        addCell(post.views);
+
+        popularTable.appendChild(row);
+    });
+}
+
+    // Prepare chart data
+    const monthlyData = data.monthly_registrations || [];
+
+    const labels = monthlyData.map(item => item.month);
+
+    const registrations = monthlyData.map(
+        item => item.registrations
+    );
+
+
+    // Draw registration chart
+const canvas = document.getElementById('registrationChart');
+
+if (!canvas) {
+    throw new Error('Registration chart canvas not found.');
+}
+
+// Destroy the previous chart before creating a new one
+if (registrationChart !== null) {
+    registrationChart.destroy();
+    registrationChart = null;
+}
+
+registrationChart = new Chart(canvas, {
+    type: 'line',
+
+    data: {
+        labels: labels,
+
+        datasets: [{
+            label: 'New Registrations',
+            data: registrations,
+
+            borderColor: '#818cf8',
+            backgroundColor: 'rgba(99, 102, 241, 0.15)',
+
+            borderWidth: 3,
+            pointBackgroundColor: '#a5b4fc',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+
+            tension: 0.35,
+            fill: true
+        }]
+    },
+
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#FAFAFA'
+                }
+            }
+        },
+
+        scales: {
+            x: {
+                ticks: {
+                    color: '#a1a1aa'
+                },
+                grid: {
+                    color: '#303036'
+                }
+            },
+
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: '#a1a1aa',
+                    precision: 0
+                },
+                grid: {
+                    color: '#303036'
+                }
+            }
+        }
+    }
+});
+
+    document.getElementById('analyticsMessage').textContent = '';
+}
+
+
+// Refresh analytics button
+document.getElementById('refreshAnalyticsBtn')
+    .addEventListener('click', async function() {
+
+        const button = this;
+        button.disabled = true;
+
+        try {
+            await loadAnalytics();
+
+            showMessage(
+                'analyticsMessage',
+                'Analytics refreshed successfully.',
+                'success'
+            );
+
+        } catch (error) {
+            showMessage(
+                'analyticsMessage',
+                error.message,
+                'danger'
+            );
+
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+
+// Load newsletter subscribers
+
+
+async function loadNewsletter() {
+    const response = await fetch('/api/admin/newsletter', {
+        credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+        throw new Error('Unable to load newsletter subscribers.');
+    }
+
+    allNewsletterSubscribers = await response.json();
+
+    const campaignCount = document.getElementById('campaignSubscriberCount');
+
+if (campaignCount) {
+    campaignCount.textContent = allNewsletterSubscribers.length;
+}
+
+    renderNewsletter();
+}
+
+
+// Display and search newsletter subscribers
+function renderNewsletter() {
+    const table = document.getElementById('newsletterTable');
+    const searchInput = document.getElementById('newsletterSearch');
+
+    if (!table || !searchInput) return;
+
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    const filteredSubscribers = allNewsletterSubscribers.filter(subscriber =>
+        (subscriber.email || '').toLowerCase().includes(searchTerm)
+    );
+
+    table.textContent = '';
+
+    if (filteredSubscribers.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 4;
+        cell.className = 'text-center muted';
+        cell.textContent = searchTerm
+            ? 'No matching subscribers found.'
+            : 'No newsletter subscribers found.';
+
+        row.appendChild(cell);
+        table.appendChild(row);
+        return;
+    }
+
+    filteredSubscribers.forEach((subscriber, index) => {
+        const row = document.createElement('tr');
+
+        function addCell(value) {
+            const cell = document.createElement('td');
+            cell.textContent = value ?? '—';
+            row.appendChild(cell);
+        }
+
+        addCell(index + 1);
+        addCell(subscriber.email);
+
+        addCell(
+            subscriber.created_at
+                ? new Date(subscriber.created_at).toLocaleString()
+                : '—'
+        );
+
+        const actionCell = document.createElement('td');
+        const deleteButton = document.createElement('button');
+
+        deleteButton.type = 'button';
+        deleteButton.className = 'btn btn-danger btn-sm';
+        deleteButton.textContent = 'Delete';
+
+        deleteButton.addEventListener('click', async function() {
+            const confirmed = confirm(
+                'Are you sure you want to delete this subscriber?'
+            );
+
+            if (!confirmed) return;
+
+            deleteButton.disabled = true;
+
+            try {
+                const deleteResponse = await fetch(
+                    `/api/admin/newsletter/${subscriber.id}`,
+                    {
+                        method: 'DELETE',
+                        credentials: 'same-origin'
+                    }
+                );
+
+                if (!deleteResponse.ok) {
+                    throw new Error('Unable to delete subscriber.');
+                }
+
+                showMessage(
+                    'newsletterMessage',
+                    'Subscriber deleted successfully.',
+                    'success'
+                );
+
+                await loadNewsletter();
+
+            } catch (error) {
+                showMessage(
+                    'newsletterMessage',
+                    error.message,
+                    'danger'
+                );
+
+                deleteButton.disabled = false;
+            }
+        });
+
+        actionCell.appendChild(deleteButton);
+        row.appendChild(actionCell);
+
+        table.appendChild(row);
+    });
+}
+
+
+// Live newsletter search
+document.getElementById('newsletterSearch')
+    .addEventListener('input', renderNewsletter);
+
+// Export newsletter subscribers to CSV
+document.getElementById('exportNewsletterBtn')
+    .addEventListener('click', function() {
+
+        const searchTerm = document.getElementById('newsletterSearch')
+            .value.trim().toLowerCase();
+
+        const subscribers = allNewsletterSubscribers.filter(subscriber =>
+            (subscriber.email || '').toLowerCase().includes(searchTerm)
+        );
+
+        if (subscribers.length === 0) {
+            showMessage(
+                'newsletterMessage',
+                'No subscribers available to export.',
+                'warning'
+            );
+            return;
+        }
+
+        const rows = [
+            ['Email Address', 'Subscription Date'],
+            ...subscribers.map(subscriber => [
+                subscriber.email || '',
+                subscriber.created_at
+                    ? new Date(subscriber.created_at).toLocaleString()
+                    : ''
+            ])
+        ];
+
+        const csv = rows.map(row =>
+            row.map(value =>
+                `"${String(value).replace(/"/g, '""')}"`
+            ).join(',')
+        ).join('\n');
+
+        const blob = new Blob(
+            ['\uFEFF' + csv],
+            { type: 'text/csv;charset=utf-8;' }
+        );
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = 'game-nexus-newsletter-subscribers.csv';
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+        showMessage(
+            'newsletterMessage',
+            'Newsletter subscribers exported successfully.',
+            'success'
+        );
+    });
+
+
+// Export newsletter subscribers to CSV
+document.getElementById('exportNewsletterBtn')
+    .addEventListener('click', function() {
+
+        const searchTerm = document.getElementById('newsletterSearch')
+            .value.trim().toLowerCase();
+
+        const subscribers = allNewsletterSubscribers.filter(subscriber =>
+            (subscriber.email || '').toLowerCase().includes(searchTerm)
+        );
+
+        if (subscribers.length === 0) {
+            showMessage(
+                'newsletterMessage',
+                'No subscribers available to export.',
+                'warning'
+            );
+            return;
+        }
+
+        const rows = [
+            ['Email Address', 'Subscription Date'],
+            ...subscribers.map(subscriber => [
+                subscriber.email || '',
+                subscriber.created_at
+                    ? new Date(subscriber.created_at).toLocaleString()
+                    : ''
+            ])
+        ];
+
+        const csv = rows.map(row =>
+            row.map(value =>
+                `"${String(value).replace(/"/g, '""')}"`
+            ).join(',')
+        ).join('\n');
+
+        const blob = new Blob(
+            ['\uFEFF' + csv],
+            { type: 'text/csv;charset=utf-8;' }
+        );
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = 'game-nexus-newsletter-subscribers.csv';
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+        showMessage(
+            'newsletterMessage',
+            'Newsletter subscribers exported successfully.',
+            'success'
+        );
+    });
+
+
+// Load contact messages
+
+
+async function loadContactMessages() {
+    const response = await fetch('/api/admin/contact-messages', {
+        credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+        throw new Error('Unable to load contact messages.');
+    }
+
+    allContactMessages = await response.json();
+
+    renderContactMessages();
+}
+
+
+// Display and filter contact messages
+function renderContactMessages() {
+    const table = document.getElementById('contactMessagesTable');
+    const searchInput = document.getElementById('contactSearch');
+
+    if (!table || !searchInput) return;
+
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    const filteredMessages = allContactMessages.filter(message => {
+        const name = (message.name || '').toLowerCase();
+        const email = (message.email || '').toLowerCase();
+
+        return name.includes(searchTerm) ||
+               email.includes(searchTerm);
+    });
+
+    table.textContent = '';
+
+    if (filteredMessages.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 7;
+        cell.className = 'text-center muted';
+        cell.textContent = searchTerm
+            ? 'No matching contact messages found.'
+            : 'No contact messages found.';
+
+        row.appendChild(cell);
+        table.appendChild(row);
+        return;
+    }
+
+    filteredMessages.forEach((message, index) => {
+        const row = document.createElement('tr');
+
+        function addCell(value) {
+            const cell = document.createElement('td');
+            cell.textContent = value ?? '—';
+            row.appendChild(cell);
+        }
+
+        addCell(index + 1);
+        addCell(message.name);
+        addCell(message.email);
+        addCell(message.topic);
+        addCell(message.message);
+
+        addCell(
+            message.created_at
+                ? new Date(message.created_at).toLocaleString()
+                : '—'
+        );
+
+        const actionCell = document.createElement('td');
+        const deleteButton = document.createElement('button');
+
+        deleteButton.type = 'button';
+        deleteButton.className = 'btn btn-danger btn-sm';
+        deleteButton.textContent = 'Delete';
+
+        deleteButton.addEventListener('click', async function() {
+            const confirmed = confirm(
+                'Are you sure you want to delete this contact message?'
+            );
+
+            if (!confirmed) return;
+
+            deleteButton.disabled = true;
+
+            try {
+                const deleteResponse = await fetch(
+                    `/api/admin/contact-messages/${message.id}`,
+                    {
+                        method: 'DELETE',
+                        credentials: 'same-origin'
+                    }
+                );
+
+                if (!deleteResponse.ok) {
+                    throw new Error('Unable to delete contact message.');
+                }
+
+                showMessage(
+                    'contactMessageStatus',
+                    'Contact message deleted successfully.',
+                    'success'
+                );
+
+                await loadContactMessages();
+
+            } catch (error) {
+                showMessage(
+                    'contactMessageStatus',
+                    error.message,
+                    'danger'
+                );
+
+                deleteButton.disabled = false;
+            }
+        });
+
+        actionCell.appendChild(deleteButton);
+        row.appendChild(actionCell);
+
+        table.appendChild(row);
+    });
+}
+
+
+// Live contact message search
+document.getElementById('contactSearch')
+    .addEventListener('input', renderContactMessages);
+
+
+
+// Refresh newsletter subscribers
+document.getElementById('refreshNewsletterBtn')
+    .addEventListener('click', async function() {
+        const button = this;
+        button.disabled = true;
+
+        try {
+            await loadNewsletter();
+
+            showMessage(
+                'newsletterMessage',
+                'Newsletter subscribers refreshed successfully.',
+                'success'
+            );
+
+        } catch (error) {
+            showMessage('newsletterMessage', error.message, 'danger');
+
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+
+// Refresh contact messages
+document.getElementById('refreshContactBtn')
+    .addEventListener('click', async function() {
+        const button = this;
+        button.disabled = true;
+
+        try {
+            await loadContactMessages();
+
+            showMessage(
+                'contactMessageStatus',
+                'Contact messages refreshed successfully.',
+                'success'
+            );
+
+        } catch (error) {
+            showMessage('contactMessageStatus', error.message, 'danger');
+
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+// Newsletter Campaign
+const campaignForm = document.getElementById('campaignForm');
+
+if (campaignForm) {
+    campaignForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const subject = document.getElementById('campaignSubject').value.trim();
+        const body = document.getElementById('campaignBody').value.trim();
+        const button = document.getElementById('sendCampaignBtn');
+        const total = allNewsletterSubscribers.length;
+
+        if (!subject || !body) {
+            showMessage('campaignMessage', 'Enter a subject and message.', 'warning');
+            return;
+        }
+
+        if (total === 0) {
+            showMessage('campaignMessage', 'There are no subscribers to send to.', 'warning');
+            return;
+        }
+
+        const confirmed = confirm(
+            `You are about to send this email to ${total} newsletter subscribers.\n\nSubject: ${subject}\n\nThis will send REAL emails. Continue?`
+        );
+
+        if (!confirmed) return;
+
+        button.disabled = true;
+        button.textContent = 'Sending campaign...';
+
+        document.getElementById('campaignResults').textContent = '';
+
+        try {
+            const response = await fetch('/api/admin/newsletter/send', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subject, body })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.detail || 'Unable to send campaign.');
+            }
+
+            showMessage(
+                'campaignMessage',
+                result.message || 'Campaign completed.',
+                result.failed > 0 ? 'warning' : 'success'
+            );
+
+            const summary = document.createElement('div');
+            summary.className = 'alert alert-info';
+            summary.textContent =
+                `Total subscribers: ${result.total ?? total} | Sent: ${result.sent ?? 0} | Failed: ${result.failed ?? 0}`;
+
+            document.getElementById('campaignResults').appendChild(summary);
+
+        } catch (error) {
+            showMessage(
+    'campaignMessage',
+    error.message || 'Something went wrong. Please check the backend.',
+    'danger'
+);;
+        } finally {
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-send me-2"></i> Send Newsletter Campaign';
+        }
+    });
+}
+
+// Send Test Newsletter Email
+const testCampaignButton = document.getElementById('sendTestCampaignBtn');
+
+if (testCampaignButton) {
+    testCampaignButton.addEventListener('click', async function() {
+
+        const subject = document.getElementById('campaignSubject').value.trim();
+        const body = document.getElementById('campaignBody').value.trim();
+
+        if (subject.length < 3 || body.length < 5) {
+            showMessage(
+                'campaignMessage',
+                'Please enter a subject and message first.',
+                'warning'
+            );
+            return;
+        }
+
+        const confirmed = confirm(
+            'Send a test email only to your admin account email?'
+        );
+
+        if (!confirmed) return;
+
+        testCampaignButton.disabled = true;
+        testCampaignButton.textContent = 'Sending test email...';
+
+        try {
+            const response = await fetch('/api/admin/newsletter/test', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subject, body })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.detail || 'Test email failed.');
+            }
+
+            showMessage(
+                'campaignMessage',
+                result.message + ' Recipient: ' + result.recipient,
+                'success'
+            );
+
+        } catch (error) {
+            showMessage(
+                'campaignMessage',
+                error.message || 'Unable to send test email.',
+                'danger'
+            );
+        } finally {
+            testCampaignButton.disabled = false;
+            testCampaignButton.innerHTML =
+                '<i class="bi bi-envelope-check me-2"></i> Send Test Email';
+        }
+    });
+}
+
+// Load Newsletter Campaign History
+async function loadCampaignHistory() {
+    const table = document.getElementById('campaignHistoryTable');
+
+    if (!table) return;
+
+    table.innerHTML = `
+        <tr>
+            <td colspan="6" class="text-center muted">
+                Loading campaign history...
+            </td>
+        </tr>
+    `;
+
+    try {
+        const response = await fetch('/api/admin/newsletter/history', {
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            throw new Error('Unable to load campaign history.');
+        }
+
+        const campaigns = await response.json();
+
+        table.innerHTML = '';
+
+        if (campaigns.length === 0) {
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center muted">
+                        No campaigns sent yet.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        campaigns.forEach(campaign => {
+            const row = document.createElement('tr');
+
+            const date = campaign.created_at
+                ? new Date(campaign.created_at).toLocaleString()
+                : 'N/A';
+
+            let statusClass = 'bg-secondary';
+
+            if (campaign.status === 'Completed') {
+                statusClass = 'bg-success';
+            } else if (campaign.status === 'Processing') {
+                statusClass = 'bg-warning text-dark';
+            } else if (campaign.status === 'Failed') {
+                statusClass = 'bg-danger';
+            } else if (campaign.status === 'Completed with errors') {
+                statusClass = 'bg-warning text-dark';
+            }
+
+            const values = [
+                campaign.subject,
+                date,
+                campaign.total_recipients,
+                campaign.sent_count,
+                campaign.failed_count
+            ];
+
+            values.forEach(value => {
+                const cell = document.createElement('td');
+                cell.textContent = value ?? 'N/A';
+                row.appendChild(cell);
+            });
+
+            const statusCell = document.createElement('td');
+            const badge = document.createElement('span');
+
+            badge.className = `badge ${statusClass}`;
+            badge.textContent = campaign.status;
+
+            statusCell.appendChild(badge);
+            row.appendChild(statusCell);
+            row.style.cursor = 'pointer';
+            row.title = 'Click to view campaign details';
+
+            row.addEventListener('click', function() {
+                showCampaignDetails(campaign);
+            });
+
+            table.appendChild(row);
+        });
+
+    } catch (error) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center text-danger">
+                    ${error.message}
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function showCampaignDetails(campaign) {
+    document.getElementById('detailSubject').textContent =
+        campaign.subject || 'N/A';
+
+    document.getElementById('detailBody').textContent =
+        campaign.body || 'Message not stored for this older campaign.';
+
+    document.getElementById('detailTotal').textContent =
+        campaign.total_recipients ?? 0;
+
+    document.getElementById('detailSent').textContent =
+        campaign.sent_count ?? 0;
+
+    document.getElementById('detailFailed').textContent =
+        campaign.failed_count ?? 0;
+
+    document.getElementById('detailStatus').textContent =
+        campaign.status || 'N/A';
+
+    document.getElementById('detailCreated').textContent =
+        campaign.created_at
+            ? new Date(campaign.created_at).toLocaleString()
+            : 'N/A';
+
+    document.getElementById('detailCompleted').textContent =
+        campaign.completed_at
+            ? new Date(campaign.completed_at).toLocaleString()
+            : 'Not completed yet';
+
+    const modalElement = document.getElementById('campaignDetailsModal');
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+    modal.show();
+}
+
+// Initialize admin dashboard
+document.addEventListener('DOMContentLoaded', async function() {
+    const allowed = await checkAdmin();
+
+    if (allowed) {
+        try {
+            await loadPosts();
+            await loadComments();
+            await loadUsers();
+            await loadAnalytics();
+            await loadNewsletter();
+            await loadContactMessages();
+            await loadCampaignHistory();
+        } catch (error) {
+            showMessage('tableMessage', error.message, 'danger');
+            console.error('Dashboard loading error:', error);
+        }
+    }
+});
+
+</script>
+
+</body>
+</html>
