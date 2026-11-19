@@ -107,6 +107,8 @@ python -m venv .venv
 
 Windows PowerShell:
 
+PS C:\Users\karan\OneDrive\Documents\karan\backend> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
