@@ -199,21 +199,21 @@ def forgot_password(
         + raw_token
     )
 
+    
     try:
-     send_password_reset_email(user.email, reset_link)
+        send_password_reset_email(user.email, reset_link)
 
     except Exception as e:
-     logging.exception("PASSWORD RESET EMAIL ERROR")
-    db.rollback()
-
-    raise HTTPException(
-        status_code=500,
-        detail=f"Email sending failed: {str(e)}"
-    )
+        logging.exception("PASSWORD RESET EMAIL ERROR")
+        raise HTTPException(
+            status_code=500,
+            detail="Password reset email could not be sent. Please try again later."
+        ) from e
 
     return {
         "message": "If an account exists with this email, a reset link will be sent."
     }
+
 
 @router.post("/reset-password")
 def reset_password(
