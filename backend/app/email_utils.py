@@ -1,30 +1,9 @@
-import resend
+import smtplib
 from email.message import EmailMessage
 from html import escape
+
 from app.config import settings
 
-def _send_email(message: EmailMessage):
-    if not settings.resend_api_key:
-        raise RuntimeError("RESEND_API_KEY is not configured.")
-
-    resend.api_key = settings.resend_api_key
-
-    plain_part = message.get_body(preferencelist=("plain",))
-    html_part = message.get_body(preferencelist=("html",))
-
-    payload = {
-        "from": settings.email_from,
-        "to": [message["To"]],
-        "subject": message["Subject"],
-    }
-
-    if plain_part:
-        payload["text"] = plain_part.get_content()
-
-    if html_part:
-        payload["html"] = html_part.get_content()
-
-    resend.Emails.send(payload)
 
 def send_password_reset_email(to_email: str, reset_link: str):
     message = EmailMessage()
@@ -52,7 +31,13 @@ GAME NEXUS Team
 """
     )
 
-    _send_email(message)
+    with smtplib.SMTP(settings.email_host, settings.email_port) as server:
+        server.starttls()
+        server.login(
+            settings.email_username,
+            settings.email_password
+        )
+        server.send_message(message)
 
 
 def send_newsletter_welcome_email(to_email: str):
@@ -177,7 +162,13 @@ GAME NEXUS Team
 
     message.add_alternative(html_body, subtype="html")
 
-    _send_email(message)
+    with smtplib.SMTP(settings.email_host, settings.email_port) as server:
+        server.starttls()
+        server.login(
+            settings.email_username,
+            settings.email_password
+        )
+        server.send_message(message)
 
 def send_newsletter_campaign_email(
     to_email: str,
@@ -254,7 +245,16 @@ GAME NEXUS Team
 
     message.add_alternative(html_body, subtype="html")
 
-    _send_email(message)
+    with smtplib.SMTP(
+        settings.email_host,
+        settings.email_port
+    ) as server:
+        server.starttls()
+        server.login(
+            settings.email_username,
+            settings.email_password
+        )
+        server.send_message(message)
 
 def send_contact_notification_email(
     name: str,
@@ -422,4 +422,14 @@ GAME NEXUS Website
     """
 
     message.add_alternative(html_body, subtype="html")
-_send_email(message)
+
+    with smtplib.SMTP(
+        settings.email_host,
+        settings.email_port
+    ) as server:
+        server.starttls()
+        server.login(
+            settings.email_username,
+            settings.email_password
+        )
+        server.send_message(message)
